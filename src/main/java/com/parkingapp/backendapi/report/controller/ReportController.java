@@ -1,11 +1,12 @@
 package com.parkingapp.backendapi.report.controller;
 
-import com.parkingapp.backendapi.report.dto.JurisdictionDto;
+import com.parkingapp.backendapi.report.dto.JurisdictionResponse;
 import com.parkingapp.backendapi.report.service.JurisdictionService;
 import com.parkingapp.backendapi.report.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,11 +20,15 @@ public class ReportController {
     private final ReportService reportService;
     private final JurisdictionService jurisdictionService;
 
-
     @GetMapping("jurisdiction")
-    public ResponseEntity<List<JurisdictionDto>> getJurisdiction(){
-        System.out.println("Jurisdiction api reached");
-
+    public ResponseEntity<List<JurisdictionResponse>> getJurisdiction(){
         return ResponseEntity.ok(jurisdictionService.getSupportedJurisdictions());
     }
+
+    @PostMapping
+    public ResponseEntity postUserReport(){
+
+        return ResponseEntity.ok("");
+    }
+
 }
