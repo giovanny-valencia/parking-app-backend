@@ -8,6 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface JurisdictionMapper {
 
+    // mapping seems to be required due to state being labeled as an enum type. City wasn't returning without it either
     @Mapping(target = "state", expression = "java(jurisdiction.getState().name())")
+    @Mapping(target = "city", source = "city")
     JurisdictionResponse toDto(Jurisdiction jurisdiction);
 }

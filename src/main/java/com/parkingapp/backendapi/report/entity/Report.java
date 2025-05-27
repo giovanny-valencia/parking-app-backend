@@ -68,7 +68,7 @@ public class Report {
     @Column(name = "status", nullable = false)
     private Status status;
 
-    @Column(name = "notes", length = 256)
+    @Column(name = "notes", length = 256) // possibly rename this field, officer related notes
     private String notes;   // reason for removal or rejecting citation.
 
     @Column(name = "created_on", nullable = false, updatable = false)

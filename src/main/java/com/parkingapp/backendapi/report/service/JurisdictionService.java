@@ -1,5 +1,6 @@
 package com.parkingapp.backendapi.report.service;
 
+import com.parkingapp.backendapi.report.entity.Jurisdiction;
 import com.parkingapp.backendapi.report.record.JurisdictionResponse;
 import com.parkingapp.backendapi.report.mapper.JurisdictionMapper;
 import com.parkingapp.backendapi.report.repository.JurisdictionRepository;
@@ -18,6 +19,12 @@ public class JurisdictionService {
 
     @Transactional(readOnly = true)
     public List<JurisdictionResponse> getSupportedJurisdictions(){
+        List<Jurisdiction> list = jurisdictionRepository.findAll();
+
+        for (Jurisdiction j : list){
+            System.out.println(j.getId() + " " + j.getState() + " " + j.getCity());
+        }
+
         return jurisdictionRepository
                 .findAll()
                 .stream()
