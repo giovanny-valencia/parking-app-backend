@@ -15,7 +15,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 
-@Table(name = "user")
+@Table(name = "users")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +25,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private Long id;
 
     @Column(name = "first_name",nullable = false)
     private String firstName;
@@ -46,7 +46,7 @@ public class User {
     @Column(name = "account_type", nullable = false)
     private AccountType accountType;
 
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on", nullable = false, updatable = false)
     private Instant createdOn;
 
     @Column(name = "updated_on")

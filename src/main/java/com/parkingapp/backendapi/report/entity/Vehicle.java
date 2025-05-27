@@ -15,21 +15,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "jurisdictions")
-@Getter
-@Setter
+@Table(name = "vehicles")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Jurisdiction {
+@Getter
+@Setter
+public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "state", nullable = false, length = 2)
-    private State state;
+    @Column(name = "plate_state", nullable = false, length = 2)
+    private State plateState;
 
-    @Column(name = "city", nullable = false, length = 32)
-    private String city;
+    @Column(name = "plate_number", nullable = false, length = 16)
+    private String plateNumber;
 }

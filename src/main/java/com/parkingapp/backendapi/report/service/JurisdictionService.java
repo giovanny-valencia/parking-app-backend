@@ -1,7 +1,6 @@
 package com.parkingapp.backendapi.report.service;
 
-import com.parkingapp.backendapi.report.dto.JurisdictionResponse;
-import com.parkingapp.backendapi.report.entity.Jurisdiction;
+import com.parkingapp.backendapi.report.record.JurisdictionResponse;
 import com.parkingapp.backendapi.report.mapper.JurisdictionMapper;
 import com.parkingapp.backendapi.report.repository.JurisdictionRepository;
 import lombok.AllArgsConstructor;

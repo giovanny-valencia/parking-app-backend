@@ -1,6 +1,6 @@
 package com.parkingapp.backendapi.report.controller;
 
-import com.parkingapp.backendapi.report.dto.JurisdictionResponse;
+import com.parkingapp.backendapi.report.record.JurisdictionResponse;
 import com.parkingapp.backendapi.report.service.JurisdictionService;
 import com.parkingapp.backendapi.report.service.ReportService;
 import lombok.AllArgsConstructor;
@@ -26,9 +26,8 @@ public class ReportController {
     }
 
     @PostMapping
-    public ResponseEntity postUserReport(){
-
-        return ResponseEntity.ok("");
+    public ResponseEntity<Void> postUserReport(){
+        return ResponseEntity.ok().build();
     }
 
 }

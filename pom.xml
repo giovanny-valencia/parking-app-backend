@@ -82,6 +82,12 @@
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
 
+		<!-- Jakarta Bean Validation, allows validation using @Min/Max/NotNull/Size -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
