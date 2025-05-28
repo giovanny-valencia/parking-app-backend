@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "report_addresses")
@@ -25,19 +26,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ReportAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     Long id;
 
-    @Column(name = "street_address", nullable = false, length = 256) // Explicit column name and length
-    private String streetAddress; // Renamed from 'street' for clarity and common convention
+    @Column(name = "street_address", length = 256) // optional field (street address is not guaranteed)
+    private String streetAddress;
 
-    @Column(name = "zip_code", length = 10) // Explicit column name and length (5 or 9 digits + optional hyphen)
-    private String zipCode; // Renamed from 'zipcode' to 'zipCode' for Java camelCase convention
+    @Column(name = "zip_code", length = 10) // length (5 or 9 digits + optional hyphen)
+    private String zipCode;
 
-    @Column(name = "location_notes", length = 128) // Explicit column name, use TEXT for notes
+    @Column(name = "location_notes", length = 128)
     private String locationNotes;
 
     @Valid
