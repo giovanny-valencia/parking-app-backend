@@ -32,9 +32,17 @@ public class ReportController {
     public ResponseEntity<Void> postUserReport(
           @Valid @RequestBody ReportSubmissionRequest reportSubmissionRequest
     ){
-
         reportService.processReportSubmissionRequest(reportSubmissionRequest);
 
+        /*
+            No current feedback on:
+            1. if the report was unique
+            2. if the report was successfully posted
+
+            In the future, when payments service is implemented, the user
+            needs to know if the report they submitted was a valid entry and/or if was even
+            successfully posted to the DB.
+         */
         return ResponseEntity.ok().build();
     }
 

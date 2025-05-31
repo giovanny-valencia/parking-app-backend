@@ -3,6 +3,7 @@ package com.parkingapp.backendapi.report.entity;
 import com.parkingapp.backendapi.report.entity.Jurisdiction;
 import com.parkingapp.backendapi.report.entity.Coordinates;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -46,7 +47,7 @@ public class ReportAddress {
     @Embedded // Tells JPA to embed the fields of Coordinates directly into the report_addresses table
     Coordinates location;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Many report addresses to one jurisdiction
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // Many report addresses to one jurisdiction
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     Jurisdiction jurisdiction;
 }

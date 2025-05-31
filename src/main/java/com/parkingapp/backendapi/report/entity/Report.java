@@ -40,7 +40,7 @@ public class Report {
 
     // Reference to vehicle table: Many reports assigned to 1 vehicle
     // A vehicle can have multiple reports
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
@@ -79,8 +79,4 @@ public class Report {
     @Column(name = "updated_on")
     private Instant  updatedOn;
 
-    public void addImage(ReportImage image) {
-        images.add(image);
-        image.setReport(this);
-    }
 }
