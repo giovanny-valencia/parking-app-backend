@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.report.record;
+package com.parkingapp.backendapi.jurisdiction.record;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

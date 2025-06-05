@@ -14,6 +14,7 @@ import software.amazon.awssdk.transfer.s3.progress.LoggingTransferListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -21,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class S3Service {
     @Value("${aws.s3.bucketName}")
-    private String bucketName; // This property is still needed for bucket name in S3 operations
+    private String bucketName;
 
     @Value("${aws.s3.region}") // This property is needed for constructing the public URL
     private String awsRegion;
@@ -35,27 +36,35 @@ public class S3Service {
         this.transferManager = transferManager;
     }
 
+
     /**
-     * Uploads a MultipartFile to S3 with a unique key.
+     * Uploads a MultipartFile to S3 using a specified object name (imageName).
      *
      * @param file The MultipartFile to upload.
-     * @return The S3 key (path) of the uploaded object.
-     * @throws IOException If there's an issue handling the file or during upload.
+     * @param reportId The ID of the report this image belongs to.
+     * @param imageName The specific name for the image (e.g., "licensePlate", "violationImage_1").
+     * The file extension will be automatically appended.
+     * @return The full S3 key (path) of the uploaded object.
+     * @throws IOException If there's an issue handling the file.
+     * @throws RuntimeException If the S3 upload fails.
      */
-    public String uploadFile(MultipartFile file) throws IOException{
+    public String uploadFile(MultipartFile file, Long reportId, String imageName) throws IOException{
         String originalFilename = file.getOriginalFilename();
         String fileExtension = "";
-        if (originalFilename != null && originalFilename.contains(".")) {
+        if (originalFilename != null && originalFilename.lastIndexOf(".") != -1) {
             fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
 
-        String s3Key = "uploads/" + UUID.randomUUID().toString() + fileExtension; // Unique key for S3
+        // Construct the S3 key following the convention: reports/{reportId}/{objectName}.{extension}
+        String s3Key = String.format("reports/%d/%s%s", reportId, imageName, fileExtension).toLowerCase();
 
-        // Create a temporary file to transfer MultipartFile content to
-        File tempFile = File.createTempFile("upload-", fileExtension);
+        // Use Files.createTempFile for more robust temporary file creation
+        Path tempFilePath = Files.createTempFile("upload-", fileExtension);
+        File tempFile = tempFilePath.toFile();
 
         try{
-            file.transferTo(tempFile); // Write MultipartFile content to temp file
+            // Write MultipartFile content to temp file
+            file.transferTo(tempFile);
 
             // Define the S3 PUT request
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -67,20 +76,30 @@ public class S3Service {
             // Build the upload request for TransferManager
             UploadFileRequest uploadFileRequest = UploadFileRequest.builder()
                     .putObjectRequest(putObjectRequest)
-                    .source(Path.of(tempFile.getAbsolutePath()))
+                    .source(tempFilePath)
                     .addTransferListener(LoggingTransferListener.create())
                     .build();
 
             // Perform the upload and wait for completion
             FileUpload fileUpload = transferManager.uploadFile(uploadFileRequest);
             CompletableFuture<CompletedFileUpload> future = fileUpload.completionFuture();
-            future.join();
+
+            // .join() blocks until the upload is complete or an exception occurs
+            CompletedFileUpload completedFileUpload = future.join();
 
             System.out.println("Successfully uploaded file to S3: " + s3Key);
-            return s3Key;
+            return s3Key; // absolute path to the object, used to make public urls
         }
+        catch (Exception e){
+            throw new RuntimeException("Failed to upload file to S3: " + s3Key, e);        }
         finally {
-            tempFile.delete();
+            // Ensure the temporary file is deleted
+            try {
+                Files.deleteIfExists(tempFilePath);
+            } catch (IOException e) {
+                // Log if temp file deletion fails, but don't rethrow
+                System.err.println("Failed to delete temporary file: " + tempFilePath + " - " + e.getMessage());
+            }
         }
     }
 }

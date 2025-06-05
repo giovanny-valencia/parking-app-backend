@@ -1,5 +1,6 @@
 package com.parkingapp.backendapi.report.mapper;
 
+import com.parkingapp.backendapi.jurisdiction.mapper.JurisdictionMapper;
 import com.parkingapp.backendapi.report.entity.ReportAddress;
 import com.parkingapp.backendapi.report.record.AddressData;
 import org.mapstruct.Mapper;

@@ -1,6 +1,6 @@
-package com.parkingapp.backendapi.report.repository;
+package com.parkingapp.backendapi.jurisdiction.repository;
 
-import com.parkingapp.backendapi.report.entity.Jurisdiction;
+import com.parkingapp.backendapi.jurisdiction.entity.Jurisdiction;
 import com.parkingapp.backendapi.common.enums.State;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

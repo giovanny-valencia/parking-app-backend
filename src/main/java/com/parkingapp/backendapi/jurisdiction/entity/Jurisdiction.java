@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.report.entity;
+package com.parkingapp.backendapi.jurisdiction.entity;
 
 import com.parkingapp.backendapi.common.enums.State;
 import jakarta.persistence.Column;

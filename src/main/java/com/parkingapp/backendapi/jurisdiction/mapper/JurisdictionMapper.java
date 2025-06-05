@@ -1,8 +1,7 @@
-package com.parkingapp.backendapi.report.mapper;
+package com.parkingapp.backendapi.jurisdiction.mapper;
 
-import com.parkingapp.backendapi.report.record.JurisdictionData;
-import com.parkingapp.backendapi.report.entity.Jurisdiction;
-import com.parkingapp.backendapi.common.enums.State;
+import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
+import com.parkingapp.backendapi.jurisdiction.entity.Jurisdiction;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,10 +1,9 @@
 package com.parkingapp.backendapi.report.record;
 
-import com.parkingapp.backendapi.report.entity.Coordinates;
-import jakarta.persistence.Embedded;
+import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record AddressData(
@@ -19,11 +18,12 @@ public record AddressData(
         @Size(max = 128, message = "Location notes cannot exceed 128 characters")
         String locationNotes, // optional
 
-        @Embedded
         @Valid
-        Coordinates location,
+        @NotNull(message = "Location coordinates are required")
+        CoordinatesData location,
 
         @Valid
+        @NotNull(message = "Jurisdiction data is required")
         JurisdictionData jurisdiction
 ) {
 }

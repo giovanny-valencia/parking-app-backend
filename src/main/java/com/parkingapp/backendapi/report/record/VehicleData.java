@@ -10,7 +10,7 @@ public record VehicleData(
         String state,
 
         @NotBlank(message = "License plate number is required")
-        @Size(min = 1, max = 10, message = "License plate number must be between 1 and 10 characters") // Added message for clarity
+        @Size(max = 10, message = "License plate number must be between 1 and 10 characters") // Added message for clarity
         String plateNumber
 ) {
 }
