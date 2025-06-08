@@ -1,18 +1,15 @@
 package com.parkingapp.backendapi.jurisdiction.service;
 
-import com.parkingapp.backendapi.common.enums.State;
 import com.parkingapp.backendapi.jurisdiction.entity.Jurisdiction;
 import com.parkingapp.backendapi.jurisdiction.repository.JurisdictionRepository;
 import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j // logging

@@ -1,14 +1,9 @@
 package com.parkingapp.backendapi.report.mapper;
 
 import com.parkingapp.backendapi.report.entity.Report;
-import com.parkingapp.backendapi.report.entity.ReportImage;
 import com.parkingapp.backendapi.report.record.ReportSubmissionRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {VehicleMapper.class, AddressMapper.class})
 public interface ReportSubmissionRequestMapper {

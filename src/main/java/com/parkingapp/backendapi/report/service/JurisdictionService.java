@@ -1,13 +1,12 @@
 package com.parkingapp.backendapi.report.service;
 
-import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
 import com.parkingapp.backendapi.jurisdiction.mapper.JurisdictionMapper;
+import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
 import com.parkingapp.backendapi.jurisdiction.repository.JurisdictionRepository;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Service

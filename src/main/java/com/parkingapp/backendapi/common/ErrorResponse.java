@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ErrorResponse {
 
-    private String message;
+  private String message;
 }

@@ -1,22 +1,18 @@
 package com.parkingapp.backendapi.common.service;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import javax.imageio.ImageIO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
 // todo: could add image size requirements after deciding on image constraints / resizing.
 @Service
 public class ImageValidationService {
-
-    @Value("${spring.servlet.multipart.max-file-size}")
-    private DataSize maxFileSize;
 
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList(
             "image/jpeg", "image/png", "image/webp"
@@ -24,6 +20,8 @@ public class ImageValidationService {
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(
             "jpg", "jpeg", "png", "webp"
     );
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private DataSize maxFileSize;
 
     public void validateImage(MultipartFile imageFile){
         // 1. Basic Checks: Null, Size and Name

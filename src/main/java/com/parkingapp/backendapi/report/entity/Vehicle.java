@@ -23,14 +23,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Vehicle {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "plate_state", nullable = false, length = 2)
-    private State plateState;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "plate_state", nullable = false, length = 2)
+  private State plateState;
 
-    @Column(name = "plate_number", nullable = false, length = 16)
-    private String plateNumber;
+  @Column(name = "plate_number", nullable = false, length = 16)
+  private String plateNumber;
 }

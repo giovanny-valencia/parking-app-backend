@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal; // Recommended for precise lat/long
 
-
 public record CoordinatesData(
         @NotNull(message = "Latitude is required")
         @Min(value = -90, message = "Latitude must be between -90 and 90 degrees.")

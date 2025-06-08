@@ -23,16 +23,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ReportImage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
+  Long id;
 
-    @Column(name = "url", nullable = false, length = 2048)
-    String url;
+  @Column(name = "url", nullable = false, length = 2048)
+  String url;
 
-    // -- Relationship --
-    @ManyToOne(fetch = FetchType.LAZY)  // Many imageUrls belong to one report
-    @JoinColumn(name = "report_id", nullable = false)   // Foreign key column in report_images table
-    private Report report;
+  // -- Relationship --
+  @ManyToOne(fetch = FetchType.LAZY) // Many imageUrls belong to one report
+  @JoinColumn(name = "report_id", nullable = false) // Foreign key column in report_images table
+  private Report report;
 }

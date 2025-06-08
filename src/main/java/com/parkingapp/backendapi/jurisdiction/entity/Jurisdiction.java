@@ -17,24 +17,24 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "jurisdictions", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"state", "city"})
-})
+@Table(
+    name = "jurisdictions",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"state", "city"})})
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Jurisdiction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "state", nullable = false, length = 2)
-    private State state;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "state", nullable = false, length = 2)
+  private State state;
 
-    @Column(name = "city", nullable = false, length = 32)
-    private String city;
+  @Column(name = "city", nullable = false, length = 32)
+  private String city;
 }
