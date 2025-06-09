@@ -1,8 +1,6 @@
 package com.parkingapp.backendapi.report.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.parkingapp.backendapi.common.service.ImageValidationService;
+import com.parkingapp.backendapi.common.exception.DuplicateReportException;
 import com.parkingapp.backendapi.jurisdiction.entity.Jurisdiction;
 import com.parkingapp.backendapi.jurisdiction.repository.JurisdictionRepository;
 import com.parkingapp.backendapi.jurisdiction.service.JurisdictionCacheService;
@@ -10,84 +8,64 @@ import com.parkingapp.backendapi.report.entity.Report;
 import com.parkingapp.backendapi.report.entity.ReportImage;
 import com.parkingapp.backendapi.report.entity.Status;
 import com.parkingapp.backendapi.report.entity.Vehicle;
-import com.parkingapp.backendapi.report.mapper.ReportSubmissionRequestMapper;
-import com.parkingapp.backendapi.report.record.ReportSubmissionRequest;
 import com.parkingapp.backendapi.report.repository.ReportRepository;
 import com.parkingapp.backendapi.report.repository.VehicleRepository;
 import com.parkingapp.backendapi.s3.service.S3Service;
 import com.parkingapp.backendapi.user.entity.User;
 import com.parkingapp.backendapi.user.repository.UserRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @AllArgsConstructor
-public class ReportSubmissionService {
+@Slf4j
+public class ReportProcessingService {
 
   private final UserRepository userRepository;
   private final ReportRepository reportRepository;
   private final VehicleRepository vehicleRepository;
   private final JurisdictionRepository jurisdictionRepository;
 
-  private final ReportSubmissionRequestMapper reportSubmissionRequestMapper;
-
-  private final ImageValidationService imageValidationService;
-  private final JurisdictionCacheService jurisdictionCacheService;
+  private final JurisdictionCacheService
+      jurisdictionCacheService; // TODO: move this to jurisdiction service
   private final S3Service s3Service;
 
-  private final ObjectMapper objectMapper;
-  private final Validator validator; // Inject the Validator
-
-  private static ReportSubmissionRequest convertReportJsonToDto(
-      String reportJson, ObjectMapper objectMapper) throws JsonProcessingException {
-    ReportSubmissionRequest reportRequest;
-    reportRequest = objectMapper.readValue(reportJson, ReportSubmissionRequest.class);
-    return reportRequest;
-  }
-
   // Simple v1 uniqueness test: reported vehicle currently has an 'open' report in the DB.
-  // in the future it will be same vehicle in a given radius
+  // TODO:  in the future it will include same vehicle in a given radius
   private boolean isDuplicateReport(Vehicle vehicle) {
     List<Status> activeStatuses = Arrays.asList(Status.OPEN, Status.ASSIGNED);
     return reportRepository.existsByVehiclePlateStateAndVehiclePlateNumberAndStatusIn(
         vehicle.getPlateState(), vehicle.getPlateNumber(), activeStatuses);
   }
 
+  /**
+   * The actual processing service of a user's report
+   *
+   * <p>handles data validation, database retrieval for assignment, saves photos to s3
+   *
+   * @param report the report domain entity
+   * @param licensePlateImageFile the MultipartFile of the license plate
+   * @param violationImageFiles the List of MultipartFile of violation images
+   * @throws IOException s3Service can throw IOException if the image fails integrity tests
+   */
   @Transactional
-  public void processReportSubmissionRequest(
-      String reportJson,
-      MultipartFile licensePlateImageFile,
-      List<MultipartFile> violationImageFiles)
+  public void processReport(
+      Report report, MultipartFile licensePlateImageFile, List<MultipartFile> violationImageFiles)
       throws IOException {
-
-    //  convert reportJson into dto
-    ReportSubmissionRequest reportRequest = convertReportJsonToDto(reportJson, objectMapper);
-
-    //  after successful mapping, validate the dto field restrictions
-    validateDto(reportRequest);
-
-    /*  data validation
-     *   starting with images before converting dto into entity model
-     *   seems slightly more optimized as there's no point to convert to entity if the images fail validation
-     */
-    imageValidationService.validateImage(licensePlateImageFile);
-    violationImageFiles.forEach(imageValidationService::validateImage);
-
-    Report report = reportSubmissionRequestMapper.toEntity(reportRequest);
 
     //  ensure that report is not a duplicate before preceding
     if (isDuplicateReport(report.getVehicle())) {
-      System.out.println("Duplicate report in system");
-      // throw new DuplicateReportException("Duplicate report found for this vehicle and status.");
-      return;
+      log.warn(
+          "Attempted to process duplicate report for vehicle: {} - {}",
+          report.getVehicle().getPlateState(),
+          report.getVehicle().getPlateNumber());
+      throw new DuplicateReportException("Duplicate report found for this vehicle and status.");
     }
 
     // validates and assigns, throws if not valid
@@ -108,6 +86,7 @@ public class ReportSubmissionService {
     // JWT authorized
     //  Worth validation checking if user was not found? Seems redundant
     //  * Note: JWT might be sufficient to associate the user preventing server hit? *
+    // TODO: replace this with jwt
     User user = userRepository.findByEmail("testuser@example.com");
     report.setReportingUser(user);
 
@@ -137,8 +116,6 @@ public class ReportSubmissionService {
         throw new RuntimeException("Failed to upload violation image " + (i + 1) + " to S3.", e);
       }
     }
-
-    System.out.println("done");
   }
 
   private void setVehicleIfExists(Report report) {
@@ -147,7 +124,7 @@ public class ReportSubmissionService {
             report.getVehicle().getPlateState(), report.getVehicle().getPlateNumber());
     if (existingVehicle
         != null) { // vehicle found in DB so associate the current report's vehicle to the DB
-                   // vehicle
+      // vehicle
       report.setVehicle(existingVehicle);
     }
   }
@@ -179,18 +156,5 @@ public class ReportSubmissionService {
                     "Error: Jurisdiction with ID "
                         + detachedJurisdiction.getId()
                         + " found in cache but not in current database. Data inconsistency"));
-  }
-
-  private void validateDto(ReportSubmissionRequest reportRequest) {
-    Set<ConstraintViolation<ReportSubmissionRequest>> violations =
-        validator.validate(reportRequest);
-    if (!violations.isEmpty()) {
-      String errorMessage =
-          violations.stream()
-              .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-              .reduce("", (a, b) -> a + (a.isEmpty() ? "" : ", ") + b);
-      throw new IllegalArgumentException(
-          "Validation failed: " + errorMessage); // handle this better
-    }
   }
 }

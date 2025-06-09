@@ -7,6 +7,6 @@ public enum Status {
   OPEN, // shown to all officers
   EXPIRED, // removed from list and marked as unattended
   ASSIGNED, // officer assigned, prevents another from also being assigned and removes it from their
-            // view on fetch
+  // view on fetch
   REMOVED, // for data tracking, lists the full report including the officer that removed it
 }

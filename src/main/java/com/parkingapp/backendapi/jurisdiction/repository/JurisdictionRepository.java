@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface  JurisdictionRepository extends JpaRepository<Jurisdiction, Long> {
-    Jurisdiction findByStateAndCity(State state, String city);
+public interface JurisdictionRepository extends JpaRepository<Jurisdiction, Long> {
+  Jurisdiction findByStateAndCity(State state, String city);
 }

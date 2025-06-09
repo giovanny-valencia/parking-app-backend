@@ -12,15 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class JurisdictionService {
 
-    private final JurisdictionRepository jurisdictionRepository;
-    private final JurisdictionMapper jurisdictionMapper;
+  private final JurisdictionRepository jurisdictionRepository;
+  private final JurisdictionMapper jurisdictionMapper;
 
-    @Transactional(readOnly = true)
-    public List<JurisdictionData> getSupportedJurisdictions(){
-        return jurisdictionRepository
-                .findAll()
-                .stream()
-                .map(jurisdictionMapper::toDto)
-                .toList();
-    }
+  @Transactional(readOnly = true)
+  public List<JurisdictionData> getSupportedJurisdictions() {
+    return jurisdictionRepository.findAll().stream().map(jurisdictionMapper::toDto).toList();
+  }
 }

@@ -6,15 +6,6 @@ import jakarta.validation.constraints.PastOrPresent;
 import java.time.Instant;
 
 public record ReportSummary(
-        @NotNull
-        Long id,
-
-        @Valid
-        @NotNull
-        CoordinatesData location,
-
-        @NotNull
-        @PastOrPresent
-        Instant createdOn
-) {
-}
+    @NotNull Long id,
+    @Valid @NotNull CoordinatesData location,
+    @NotNull @PastOrPresent Instant createdOn) {}

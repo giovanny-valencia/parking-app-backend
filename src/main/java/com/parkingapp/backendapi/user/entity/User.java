@@ -23,33 +23,33 @@ import lombok.ToString;
 @Setter
 @ToString
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
+  private Long id;
 
-    @Column(name = "first_name",nullable = false)
-    private String firstName;
+  @Column(name = "first_name", nullable = false)
+  private String firstName;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+  @Column(name = "last_name", nullable = false)
+  private String lastName;
 
-    @Column(name = "date_of_birth", nullable = false)
-    private java.time.LocalDate dateOfBirth;
+  @Column(name = "date_of_birth", nullable = false)
+  private java.time.LocalDate dateOfBirth;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+  @Column(name = "email", nullable = false, unique = true)
+  private String email;
 
-    @Column(name = "hashed_password", nullable = false)
-    private String hashedPassword;
+  @Column(name = "hashed_password", nullable = false)
+  private String hashedPassword;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "account_type", nullable = false)
-    private AccountType accountType;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "account_type", nullable = false)
+  private AccountType accountType;
 
-    @Column(name = "created_on", nullable = false, updatable = false)
-    private Instant createdOn;
+  @Column(name = "created_on", nullable = false, updatable = false)
+  private Instant createdOn;
 
-    @Column(name = "updated_on")
-    private Instant  updatedOn;
+  @Column(name = "updated_on")
+  private Instant updatedOn;
 }

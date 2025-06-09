@@ -27,20 +27,30 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ReportAddress {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    Long id;
-    @Valid
-    @Embedded // Tells JPA to embed the fields of CoordinatesData directly into the report_addresses table
-    Coordinates location;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // Many report addresses to one jurisdiction
-    @JoinColumn(name = "jurisdiction_id", nullable = false)
-    Jurisdiction jurisdiction;
-    @Column(name = "street_address", length = 256) // optional field (street address is not guaranteed)
-    private String streetAddress;
-    @Column(name = "zip_code", length = 10) // length (5 or 9 digits + optional hyphen)
-    private String zipCode;
-    @Column(name = "location_notes", length = 128)
-    private String locationNotes;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
+  Long id;
+
+  @Valid
+  @Embedded // Tells JPA to embed the fields of CoordinatesData directly into the report_addresses
+            // table
+  Coordinates location;
+
+  @ManyToOne(
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL) // Many report addresses to one jurisdiction
+  @JoinColumn(name = "jurisdiction_id", nullable = false)
+  Jurisdiction jurisdiction;
+
+  @Column(
+      name = "street_address",
+      length = 256) // optional field (street address is not guaranteed)
+  private String streetAddress;
+
+  @Column(name = "zip_code", length = 10) // length (5 or 9 digits + optional hyphen)
+  private String zipCode;
+
+  @Column(name = "location_notes", length = 128)
+  private String locationNotes;
 }

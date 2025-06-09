@@ -14,37 +14,34 @@ import software.amazon.awssdk.transfer.s3.S3TransferManager;
 @Configuration
 public class S3Config {
 
-    @Value("${aws.s3.region}")
-    private String awsRegion;
+  @Value("${aws.s3.region}")
+  private String awsRegion;
 
-    // IMPORTANT: For local development. In production, prefer IAM roles on EC2/ECS/EKS.
-    @Value("${aws.accessKeyId}")
-    private String accessKeyId;
+  // IMPORTANT: For local development. In production, prefer IAM roles on EC2/ECS/EKS.
+  @Value("${aws.accessKeyId}")
+  private String accessKeyId;
 
-    @Value("${aws.secretAccessKey}")
-    private String secretAccessKey;
+  @Value("${aws.secretAccessKey}")
+  private String secretAccessKey;
 
-    @Bean
-    public S3AsyncClient s3AsyncClient() {
-        StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(
-                AwsBasicCredentials.create(accessKeyId, secretAccessKey)
-        );
+  @Bean
+  public S3AsyncClient s3AsyncClient() {
+    StaticCredentialsProvider credentialsProvider =
+        StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey));
 
-        return S3AsyncClient.builder()
-                .region(Region.of(awsRegion))
-                .credentialsProvider(credentialsProvider)
-                // Use Netty for the underlying HTTP client for async operations
-                .httpClientBuilder(NettyNioAsyncHttpClient.builder()
-                        .writeTimeout(Duration.ofSeconds(30)) // Example timeout
-                        .readTimeout(Duration.ofSeconds(30)))
-                .build();
+    return S3AsyncClient.builder()
+        .region(Region.of(awsRegion))
+        .credentialsProvider(credentialsProvider)
+        // Use Netty for the underlying HTTP client for async operations
+        .httpClientBuilder(
+            NettyNioAsyncHttpClient.builder()
+                .writeTimeout(Duration.ofSeconds(30)) // Example timeout
+                .readTimeout(Duration.ofSeconds(30)))
+        .build();
+  }
 
-    }
-
-    @Bean
-    public S3TransferManager s3TransferManager(S3AsyncClient s3AsyncClient){
-        return S3TransferManager.builder()
-                .s3Client(s3AsyncClient)
-                .build();
-    }
+  @Bean
+  public S3TransferManager s3TransferManager(S3AsyncClient s3AsyncClient) {
+    return S3TransferManager.builder().s3Client(s3AsyncClient).build();
+  }
 }

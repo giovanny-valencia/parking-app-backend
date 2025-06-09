@@ -16,31 +16,31 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class JurisdictionCacheService {
 
-    private final JurisdictionRepository jurisdictionRepository;
+  private final JurisdictionRepository jurisdictionRepository;
 
-    private final Map<String, Jurisdiction> jurisdictionCache = new ConcurrentHashMap<>();
+  private final Map<String, Jurisdiction> jurisdictionCache = new ConcurrentHashMap<>();
 
-    @PostConstruct // called automatically after the bean is constructed
-    public void preloadJurisdictions(){
-        log.info("Preloading jurisdiction data into cache...");
+  @PostConstruct // called automatically after the bean is constructed
+  public void preloadJurisdictions() {
+    log.info("Preloading jurisdiction data into cache...");
 
-        List<Jurisdiction> allJurisdictions = jurisdictionRepository.findAll();
+    List<Jurisdiction> allJurisdictions = jurisdictionRepository.findAll();
 
-        for (Jurisdiction jurisdiction : allJurisdictions){
-            // state enum converts to String type
-            String key = buildJurisdictionKey(jurisdiction.getState().toString(), jurisdiction.getCity());
-            jurisdictionCache.put(key, jurisdiction);
-        }
-        log.info("Preloaded {} jurisdictions.", jurisdictionCache.size());
+    for (Jurisdiction jurisdiction : allJurisdictions) {
+      // state enum converts to String type
+      String key = buildJurisdictionKey(jurisdiction.getState().toString(), jurisdiction.getCity());
+      jurisdictionCache.put(key, jurisdiction);
     }
+    log.info("Preloaded {} jurisdictions.", jurisdictionCache.size());
+  }
 
-    // key follows "StateInitials-City" format per client
-    private String buildJurisdictionKey(String state, String city) {
-        return (state + "-" + city).toUpperCase();
-    }
+  // key follows "StateInitials-City" format per client
+  private String buildJurisdictionKey(String state, String city) {
+    return (state + "-" + city).toUpperCase();
+  }
 
-    public Optional<Jurisdiction> findJurisdictionByStateAndCity(String state, String city){
-        String key = buildJurisdictionKey(state, city);
-        return Optional.ofNullable(jurisdictionCache.get(key));
-    }
+  public Optional<Jurisdiction> findJurisdictionByStateAndCity(String state, String city) {
+    String key = buildJurisdictionKey(state, city);
+    return Optional.ofNullable(jurisdictionCache.get(key));
+  }
 }

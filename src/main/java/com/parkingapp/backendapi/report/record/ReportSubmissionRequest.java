@@ -12,7 +12,4 @@ public record ReportSubmissionRequest(
 
     // address: street, zip, notes, lat/long, jurisdiction: state, city
     @Valid @NotNull AddressData address,
-    @NotBlank
-        // @NotNull
-        @Size(max = 256)
-        String description) {}
+    @NotBlank @Size(max = 256) String description) {}

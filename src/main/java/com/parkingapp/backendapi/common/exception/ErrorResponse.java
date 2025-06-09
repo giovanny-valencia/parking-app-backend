@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.common;
+package com.parkingapp.backendapi.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
