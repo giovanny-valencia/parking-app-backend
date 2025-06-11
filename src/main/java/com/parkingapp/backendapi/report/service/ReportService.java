@@ -4,6 +4,7 @@ import com.parkingapp.backendapi.common.service.ImageValidationService;
 import com.parkingapp.backendapi.report.entity.Report;
 import com.parkingapp.backendapi.report.mapper.ReportRequestMapper;
 import com.parkingapp.backendapi.report.record.ReportSubmissionRequest;
+import com.parkingapp.backendapi.report.record.ReportSummary;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.io.IOException;
@@ -26,23 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReportService {
 
   private final ReportProcessingService reportProcessingService;
+  private final ActiveParkingReportService activeParkingReportService;
   private final ImageValidationService imageValidationService;
 
   private final ReportRequestMapper reportRequestMapper;
   private final Validator validator;
-
-  private void validateDto(ReportSubmissionRequest reportRequest) {
-    Set<ConstraintViolation<ReportSubmissionRequest>> violations =
-        validator.validate(reportRequest);
-    if (!violations.isEmpty()) {
-      String errorMessage =
-          violations.stream()
-              .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-              .reduce("", (a, b) -> a + (a.isEmpty() ? "" : ", ") + b);
-      throw new IllegalArgumentException(
-          "Validation failed: " + errorMessage); // handle this better
-    }
-  }
 
   /**
    * Initial steps of processing a new report submitted by a user.
@@ -74,5 +63,45 @@ public class ReportService {
     Report report = reportRequestMapper.toEntity(reportRequest);
 
     reportProcessingService.processReport(report, licensePlateImageFile, violationImageFiles);
+  }
+
+  /**
+   * Helper function for submitNewReport that validates the mapped dto of a Report
+   *
+   * @param reportRequest dto representation of a Report
+   */
+  private void validateDto(ReportSubmissionRequest reportRequest) {
+    Set<ConstraintViolation<ReportSubmissionRequest>> violations =
+        validator.validate(reportRequest);
+    if (!violations.isEmpty()) {
+      String errorMessage =
+          violations.stream()
+              .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+              .reduce("", (a, b) -> a + (a.isEmpty() ? "" : ", ") + b);
+      throw new IllegalArgumentException(
+          "Validation failed: " + errorMessage); // handle this better
+    }
+  }
+
+  public List<ReportSummary> getActiveReportSummaries() {
+    // TODO: recheck and update these comments after demo for prod
+
+    // officer will send JWT as bearer token -- this will produce their associated jurisdiction
+    // (grabbed here)
+    // TODO: current officer lat/long location and possibly a desired radius -- will only provide
+    // active reports in this range
+
+    //  for now use testing jurisdiction -- simulate JWT data
+    // note: in actual this might be a JurisdictionData point? -- worry about this later
+    String J_TEST_STATE = "NJ";
+    String j_TEST_CITY = "Union City";
+
+    List<ReportSummary> activeReportSummaries =
+        activeParkingReportService.retrieveReportsByJurisdiction(J_TEST_STATE, j_TEST_CITY);
+
+    System.out.println("logging active summaries");
+    activeReportSummaries.forEach(System.out::println);
+
+    return activeReportSummaries;
   }
 }

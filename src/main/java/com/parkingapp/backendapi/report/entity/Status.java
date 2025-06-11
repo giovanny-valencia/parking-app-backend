@@ -1,12 +1,15 @@
 package com.parkingapp.backendapi.report.entity;
 
 public enum Status {
-  // don't currently see a need for a "NEW" status type but might change
-  // client will visually track report status to the individual officer
+  OPEN, // Report is active, awaiting assignment to an officer.
 
-  OPEN, // shown to all officers
-  EXPIRED, // removed from list and marked as unattended
-  ASSIGNED, // officer assigned, prevents another from also being assigned and removes it from their
-  // view on fetch
-  REMOVED, // for data tracking, lists the full report including the officer that removed it
+  ASSIGNED, // An officer is currently attending to this report.
+
+  ACCEPTED, // Report was acted upon; violator was cited.
+
+  REJECTED, // Report was investigated but no action (e.g., citation) was taken.
+
+  EXPIRED, // Report passed its defined active time limit without being resolved by an officer.
+
+  INVALID, // Report deemed invalid (e.g., fake report, mismatching plate number)
 }

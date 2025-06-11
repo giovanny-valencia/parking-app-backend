@@ -3,9 +3,9 @@ package com.parkingapp.backendapi.report.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
-import com.parkingapp.backendapi.report.entity.Report;
+import com.parkingapp.backendapi.jurisdiction.service.JurisdictionService;
 import com.parkingapp.backendapi.report.record.ReportSubmissionRequest;
-import com.parkingapp.backendapi.report.service.JurisdictionService;
+import com.parkingapp.backendapi.report.record.ReportSummary;
 import com.parkingapp.backendapi.report.service.ReportService;
 import java.io.IOException;
 import java.util.List;
@@ -33,9 +33,6 @@ public class ReportController {
   private final ReportService reportService;
 
   private final ObjectMapper objectMapper;
-
-  // TODO: move this to jurisdiction service
-  // Instead use the cached jurisdiction?
 
   private static ReportSubmissionRequest convertReportJsonToDto(
       String reportJson, ObjectMapper objectMapper) throws JsonProcessingException {
@@ -67,11 +64,12 @@ public class ReportController {
    *     status of 200 OK. Currently, returns an empty response.
    */
   @GetMapping("active-summaries") // better naming convention?
-  public ResponseEntity<List<Report>> getActiveReportSummaries(
+  public ResponseEntity<List<ReportSummary>> getActiveReportSummaries(
       //   @AuthenticationPrincipal UserDetails principal
       ) {
+    List<ReportSummary> activeReportSummaries = reportService.getActiveReportSummaries();
 
-    return ResponseEntity.ok().build(); // Current placeholder, needs actual implementation
+    return ResponseEntity.ok(activeReportSummaries);
   }
 
   /**

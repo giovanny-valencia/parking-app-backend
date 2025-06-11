@@ -20,9 +20,12 @@ import software.amazon.awssdk.transfer.s3.progress.LoggingTransferListener;
 public class S3Service {
   // These clients are now injected by Spring, thanks to S3Config
   private final S3AsyncClient s3AsyncClient;
+
   private final S3TransferManager transferManager;
+
   @Value("${aws.s3.bucketName}")
   private String bucketName;
+
   @Value("${aws.s3.region}") // This property is needed for constructing the public URL
   private String awsRegion;
 
