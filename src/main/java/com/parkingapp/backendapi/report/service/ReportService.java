@@ -111,13 +111,8 @@ public class ReportService {
    * @return full report details
    */
   public ReportOfficerViewDto getSelectedReportDetails(Long id) {
-    Report report = activeParkingReportService.retrieveReportDetails(id);
 
-    ReportOfficerViewDto dto = reportViewMapper.toDto(report);
-
-    System.out.println("dto: " + dto);
-
-    return dto;
+    return activeParkingReportService.retrieveReportDetails(id);
   }
 
   /**

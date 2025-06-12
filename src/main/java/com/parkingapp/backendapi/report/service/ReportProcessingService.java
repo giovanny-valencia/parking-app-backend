@@ -34,6 +34,7 @@ public class ReportProcessingService {
 
   private final JurisdictionCacheService
       jurisdictionCacheService; // TODO: move this to jurisdiction service
+
   private final S3Service s3Service;
 
   // Simple v1 uniqueness test: reported vehicle currently has an 'open' report in the DB.
@@ -52,7 +53,7 @@ public class ReportProcessingService {
    * @param report the report domain entity
    * @param licensePlateImageFile the MultipartFile of the license plate
    * @param violationImageFiles the List of MultipartFile of violation images
-   * @throws IOException s3Service can throw IOException if the image fails integrity tests
+   * @throws IOException s3UploadService can throw IOException if the image fails integrity tests
    */
   @Transactional
   public void processReport(

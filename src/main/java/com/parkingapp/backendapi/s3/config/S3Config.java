@@ -9,6 +9,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
 
 @Configuration
@@ -43,5 +44,16 @@ public class S3Config {
   @Bean
   public S3TransferManager s3TransferManager(S3AsyncClient s3AsyncClient) {
     return S3TransferManager.builder().s3Client(s3AsyncClient).build();
+  }
+
+  @Bean
+  public S3Presigner s3Presigner() {
+    StaticCredentialsProvider credentialsProvider =
+            StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey));
+
+    return S3Presigner.builder()
+            .region(Region.of(awsRegion))
+            .credentialsProvider(credentialsProvider)
+            .build();
   }
 }

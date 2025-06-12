@@ -1,41 +1,19 @@
 package com.parkingapp.backendapi.s3.service;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3AsyncClient;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.transfer.s3.S3TransferManager;
-import software.amazon.awssdk.transfer.s3.model.CompletedFileUpload;
-import software.amazon.awssdk.transfer.s3.model.FileUpload;
-import software.amazon.awssdk.transfer.s3.model.UploadFileRequest;
-import software.amazon.awssdk.transfer.s3.progress.LoggingTransferListener;
 
 @Service
+@AllArgsConstructor
 public class S3Service {
-  // These clients are now injected by Spring, thanks to S3Config
-  private final S3AsyncClient s3AsyncClient;
 
-  private final S3TransferManager transferManager;
-
-  @Value("${aws.s3.bucketName}")
-  private String bucketName;
-
-  @Value("${aws.s3.region}") // This property is needed for constructing the public URL
-  private String awsRegion;
-
-  public S3Service(S3AsyncClient s3AsyncClient, S3TransferManager transferManager) {
-    this.s3AsyncClient = s3AsyncClient;
-    this.transferManager = transferManager;
-  }
+  private final S3UploadService s3UploadService;
+  private final S3PresigningService s3PresigningService;
 
   /**
-   * Uploads a MultipartFile to S3 using a specified object name (imageName).
+   * Delegation method for S3 Uploads
    *
    * @param file The MultipartFile to upload.
    * @param reportId The ID of the report this image belongs to.
@@ -46,60 +24,27 @@ public class S3Service {
    * @throws RuntimeException If the S3 upload fails.
    */
   public String uploadFile(MultipartFile file, Long reportId, String imageName) throws IOException {
-    String originalFilename = file.getOriginalFilename();
-    String fileExtension = "";
-    if (originalFilename != null && originalFilename.lastIndexOf(".") != -1) {
-      fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-    }
+    return s3UploadService.uploadFile(file, reportId, imageName);
+  }
 
-    // Construct the S3 key following the convention: reports/{reportId}/{objectName}.{extension}
-    String s3Key =
-        String.format("reports/%d/%s%s", reportId, imageName, fileExtension).toLowerCase();
+  /**
+   * Delegation method for S3 presignedUrl
+   *
+   * @param s3Key The S3 key (path) of the object.
+   * @param expirationMinutes The duration in minutes for which the URL will be valid.
+   * @return The pre-signed URL as a String.
+   */
+  public String generatePresignedUrl(String s3Key, long expirationMinutes) {
+    return s3PresigningService.generatePresignedUrl(s3Key, expirationMinutes);
+  }
 
-    // Use Files.createTempFile for more robust temporary file creation
-    Path tempFilePath = Files.createTempFile("upload-", fileExtension);
-    File tempFile = tempFilePath.toFile();
-
-    try {
-      // Write MultipartFile content to temp file
-      file.transferTo(tempFile);
-
-      // Define the S3 PUT request
-      PutObjectRequest putObjectRequest =
-          PutObjectRequest.builder()
-              .bucket(bucketName)
-              .key(s3Key)
-              .contentType(file.getContentType())
-              .build();
-
-      // Build the upload request for TransferManager
-      UploadFileRequest uploadFileRequest =
-          UploadFileRequest.builder()
-              .putObjectRequest(putObjectRequest)
-              .source(tempFilePath)
-              .addTransferListener(LoggingTransferListener.create())
-              .build();
-
-      // Perform the upload and wait for completion
-      FileUpload fileUpload = transferManager.uploadFile(uploadFileRequest);
-      CompletableFuture<CompletedFileUpload> future = fileUpload.completionFuture();
-
-      // .join() blocks until the upload is complete or an exception occurs
-      CompletedFileUpload completedFileUpload = future.join();
-
-      System.out.println("Successfully uploaded file to S3: " + s3Key);
-      return s3Key; // absolute path to the object, used to make public urls
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to upload file to S3: " + s3Key, e);
-    } finally {
-      // Ensure the temporary file is deleted
-      try {
-        Files.deleteIfExists(tempFilePath);
-      } catch (IOException e) {
-        // Log if temp file deletion fails, but don't rethrow
-        System.err.println(
-            "Failed to delete temporary file: " + tempFilePath + " - " + e.getMessage());
-      }
-    }
+  /**
+   * Delegation method for S3 presignedUrl, default duration of 5 minutes
+   *
+   * @param s3Key The S3 key (path) of the object.
+   * @return The pre-signed URL as a String.
+   */
+  public String generatePresignedUrl(String s3Key) {
+    return s3PresigningService.generatePresignedUrl(s3Key);
   }
 }

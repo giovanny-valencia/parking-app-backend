@@ -6,8 +6,12 @@ import com.parkingapp.backendapi.jurisdiction.service.JurisdictionCacheService;
 import com.parkingapp.backendapi.jurisdiction.service.JurisdictionService;
 import com.parkingapp.backendapi.report.entity.Report;
 import com.parkingapp.backendapi.report.entity.Status;
+import com.parkingapp.backendapi.report.mapper.ReportViewMapper;
+import com.parkingapp.backendapi.report.record.ReportImageDto;
+import com.parkingapp.backendapi.report.record.ReportOfficerViewDto;
 import com.parkingapp.backendapi.report.record.ReportSummaryDto;
 import com.parkingapp.backendapi.report.repository.ReportRepository;
+import com.parkingapp.backendapi.s3.service.S3Service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
@@ -22,9 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ActiveParkingReportService {
 
   private final ReportRepository reportRepository;
-  private final JurisdictionService jurisdictionService;
+
+  private final S3Service s3Service;
+
+  private final ReportViewMapper reportViewMapper;
 
   // TODO: move this to jurisdiction service
+  private final JurisdictionService jurisdictionService;
   private final JurisdictionCacheService jurisdictionCacheService;
 
   /**
@@ -68,15 +76,50 @@ public class ActiveParkingReportService {
   }
 
   /**
-   * TODO: possible validation here? Is the report still active in the db?
+   * Retrieves full Report data and transforms it into a `ReportOfficerViewDto` with S3 pre-signed
+   * URLs for images.
    *
-   * @param id selected report id
-   * @return full Report data
+   * @param id The ID of the report to retrieve.
+   * @return A `ReportOfficerViewDto` containing the report data with pre-signed image URLs.
+   * @throws NoSuchElementException if the report with the given ID is not found.
    */
-  @Transactional
-  public Report retrieveReportDetails(Long id) {
-    return reportRepository
-        .findById(id)
-        .orElseThrow(() -> new NoSuchElementException("Report with ID " + id + " not found."));
+  @Transactional(readOnly = true)
+  public ReportOfficerViewDto retrieveReportDetails(Long id) {
+    // fetch the report from the database
+    Report report =
+        reportRepository
+            .findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Report with ID " + id + " not found."));
+
+    // convert it to a mutable dto
+    ReportOfficerViewDto dto = reportViewMapper.toDto(report);
+
+    // debug to confirm dto
+    System.out.println("dto data");
+    System.out.println(dto.getAddressDto());
+    System.out.println(dto.getVehicleDto());
+    System.out.println(dto.getReportImageDto());
+    System.out.println(dto.getDescription());
+    System.out.println(dto.getCreatedOn());
+
+    List<ReportImageDto> signedImageDtos =
+        report.getImages().stream()
+            .map(
+                imageEntity -> {
+                  String s3Key = imageEntity.getUrl();
+
+                  String s3SignedUrl = s3Service.generatePresignedUrl(s3Key);
+
+                  return new ReportImageDto(s3SignedUrl);
+                })
+            .toList();
+
+    dto.setReportImageDto(signedImageDtos);
+
+    dto.getReportImageDto()
+        .forEach(
+                System.out::println);
+
+    return dto;
   }
 }
