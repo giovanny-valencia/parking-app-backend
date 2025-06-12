@@ -1,7 +1,7 @@
 package com.parkingapp.backendapi.report.mapper;
 
 import com.parkingapp.backendapi.report.entity.Report;
-import com.parkingapp.backendapi.report.record.ReportSubmissionRequest;
+import com.parkingapp.backendapi.report.record.ReportRequestDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -23,5 +23,5 @@ public interface ReportRequestMapper {
       target = "createdOn",
       expression = "java(java.time.Instant.now())") // Add this for createdOn
   @Mapping(target = "updatedOn", ignore = true) // Not updated on creation
-  Report toEntity(ReportSubmissionRequest request);
+  Report toEntity(ReportRequestDto request);
 }

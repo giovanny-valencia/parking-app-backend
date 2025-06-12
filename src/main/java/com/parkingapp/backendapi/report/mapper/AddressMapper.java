@@ -2,8 +2,8 @@ package com.parkingapp.backendapi.report.mapper;
 
 import com.parkingapp.backendapi.jurisdiction.mapper.JurisdictionMapper;
 import com.parkingapp.backendapi.report.entity.ReportAddress;
-import com.parkingapp.backendapi.report.record.AddressData;
-import com.parkingapp.backendapi.report.record.CoordinatesData;
+import com.parkingapp.backendapi.report.record.AddressDto;
+import com.parkingapp.backendapi.report.record.CoordinatesDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,11 +17,11 @@ public interface AddressMapper {
   @Mapping(target = "locationNotes", source = "dto.locationNotes")
   @Mapping(target = "location", source = "dto.location")
   @Mapping(target = "jurisdiction", source = "dto.jurisdiction")
-  ReportAddress toEntity(AddressData dto);
+  ReportAddress toEntity(AddressDto dto);
 
   @Mapping(
       target = ".",
       source =
-          "entity.location") // Maps all fields from entity.location to CoordinatesData directly
-  CoordinatesData toCoordinatesData(ReportAddress entity);
+          "entity.location") // Maps all fields from entity.location to CoordinatesDto directly
+  CoordinatesDto toDto(ReportAddress entity);
 }

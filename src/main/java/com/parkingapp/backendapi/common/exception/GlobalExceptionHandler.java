@@ -3,6 +3,7 @@ package com.parkingapp.backendapi.common.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,21 @@ public class GlobalExceptionHandler {
         new ErrorResponse(ex.getMessage()),
         HttpStatus.CONFLICT // Recommended for duplicate resources
         );
+  }
+
+  /**
+   * Handles exceptions when a requested resource is not found (e.g., report by ID). Logs specific
+   * message, sends "Not Found" (404) to client.
+   *
+   * @param ex The exception
+   * @return The response entity
+   */
+  @ExceptionHandler(NoSuchElementException.class) // <-- New handler
+  public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex) {
+    log.warn("Resource Not Found Error: {}", ex.getMessage()); // Use warn level for not found
+    return new ResponseEntity<>(
+        new ErrorResponse(ex.getMessage()), // Return the specific message about what wasn't found
+        HttpStatus.NOT_FOUND); // Appropriate 404 status
   }
 
   /**

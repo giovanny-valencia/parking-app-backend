@@ -2,10 +2,10 @@ package com.parkingapp.backendapi.report.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
-import com.parkingapp.backendapi.jurisdiction.service.JurisdictionService;
-import com.parkingapp.backendapi.report.record.ReportSubmissionRequest;
-import com.parkingapp.backendapi.report.record.ReportSummary;
+import com.parkingapp.backendapi.report.entity.Report;
+import com.parkingapp.backendapi.report.record.ReportOfficerViewDto;
+import com.parkingapp.backendapi.report.record.ReportRequestDto;
+import com.parkingapp.backendapi.report.record.ReportSummaryDto;
 import com.parkingapp.backendapi.report.service.ReportService;
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -29,27 +30,15 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/reports")
 public class ReportController {
 
-  private final JurisdictionService jurisdictionService;
   private final ReportService reportService;
 
   private final ObjectMapper objectMapper;
 
-  private static ReportSubmissionRequest convertReportJsonToDto(
+  private static ReportRequestDto convertReportJsonToDto(
       String reportJson, ObjectMapper objectMapper) throws JsonProcessingException {
-    ReportSubmissionRequest reportRequest;
-    reportRequest = objectMapper.readValue(reportJson, ReportSubmissionRequest.class);
+    ReportRequestDto reportRequest;
+    reportRequest = objectMapper.readValue(reportJson, ReportRequestDto.class);
     return reportRequest;
-  }
-
-  /**
-   * Retrieves a list of all jurisdictions currently supported by the application.
-   *
-   * @return A {@code ResponseEntity} containing a list of {@code JurisdictionData} objects and an
-   *     HTTP status of 200 OK.
-   */
-  @GetMapping("jurisdiction")
-  public ResponseEntity<List<JurisdictionData>> getJurisdiction() {
-    return ResponseEntity.ok(jurisdictionService.getSupportedJurisdictions());
   }
 
   /**
@@ -63,13 +52,24 @@ public class ReportController {
    * @return A {@code ResponseEntity} containing a list of {@code Report} summaries and an HTTP
    *     status of 200 OK. Currently, returns an empty response.
    */
-  @GetMapping("active-summaries") // better naming convention?
-  public ResponseEntity<List<ReportSummary>> getActiveReportSummaries(
+  @GetMapping("/active-summaries")
+  public ResponseEntity<List<ReportSummaryDto>> getActiveReportSummaries(
       //   @AuthenticationPrincipal UserDetails principal
       ) {
-    List<ReportSummary> activeReportSummaries = reportService.getActiveReportSummaries();
+    List<ReportSummaryDto> activeReportSummaries = reportService.getActiveReportSummaries();
 
     return ResponseEntity.ok(activeReportSummaries);
+  }
+
+  /**
+   * Retrieves the full report for the specified id
+   *
+   * @param id selected report id
+   * @return full Report data
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<ReportOfficerViewDto> getSelectedReportDetails(@PathVariable Long id) {
+    return ResponseEntity.ok(reportService.getSelectedReportDetails(id));
   }
 
   /**
@@ -79,8 +79,8 @@ public class ReportController {
    * received as a JSON string rather than directly binding to a DTO. This approach was adopted
    * after encountering issues where the React Native Expo client failed to properly map the
    * 'report' part to a DTO, even though standard tools like Postman succeeded. The JSON string is
-   * manually parsed into a ReportSubmissionRequest DTO here, with DTO and image validation handled
-   * by ReportService. This solution is pragmatic for now but should be re-evaluated if the client's
+   * manually parsed into a ReportRequestDto DTO here, with DTO and image validation handled by
+   * ReportService. This solution is pragmatic for now but should be re-evaluated if the client's
    * form data submission mechanism is refactored.
    *
    * @param reportJson The report details as a JSON string.
@@ -96,7 +96,7 @@ public class ReportController {
       @RequestPart(value = "violationImages") List<MultipartFile> violationImages)
       throws IOException {
 
-    ReportSubmissionRequest reportRequest = convertReportJsonToDto(reportJson, objectMapper);
+    ReportRequestDto reportRequest = convertReportJsonToDto(reportJson, objectMapper);
     reportService.submitNewReport(reportRequest, licensePlateImage, violationImages);
 
     /*

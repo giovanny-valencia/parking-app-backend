@@ -1,7 +1,7 @@
 package com.parkingapp.backendapi.report.mapper;
 
 import com.parkingapp.backendapi.report.entity.Report;
-import com.parkingapp.backendapi.report.record.ReportSummary;
+import com.parkingapp.backendapi.report.record.ReportSummaryDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,5 +13,5 @@ public interface ReportSummaryMapper {
   @Mapping(target = "id", source = "report.id")
   @Mapping(target = "location", source = "report.address")
   @Mapping(target = "createdOn", source = "report.createdOn")
-  ReportSummary toDto(Report report);
+  ReportSummaryDto toDto(Report report);
 }

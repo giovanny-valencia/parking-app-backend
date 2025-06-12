@@ -3,7 +3,7 @@ package com.parkingapp.backendapi.report.record;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record VehicleData(
+public record VehicleDto(
     @NotBlank(message = "License plate state is required")
         @Size(min = 2, max = 2, message = "License plate state must be a 2-character abbreviation")
         String state,

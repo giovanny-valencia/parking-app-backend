@@ -33,7 +33,7 @@ public class ReportAddress {
   Long id;
 
   @Valid
-  @Embedded // Tells JPA to embed the fields of CoordinatesData directly into the report_addresses
+  @Embedded // Tells JPA to embed the fields of CoordinatesDto directly into the report_addresses
             // table
   Coordinates location;
 

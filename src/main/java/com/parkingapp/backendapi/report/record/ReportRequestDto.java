@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record ReportSubmissionRequest(
+public record ReportRequestDto(
 
     // vehicle: state, plate
-    @Valid @NotNull VehicleData vehicle,
+    @Valid @NotNull VehicleDto vehicle,
 
     // address: street, zip, notes, lat/long, jurisdiction: state, city
-    @Valid @NotNull AddressData address,
+    @Valid @NotNull AddressDto address,
     @NotBlank @Size(max = 256) String description) {}
