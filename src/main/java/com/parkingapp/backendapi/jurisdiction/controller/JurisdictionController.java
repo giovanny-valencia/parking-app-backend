@@ -1,6 +1,6 @@
 package com.parkingapp.backendapi.jurisdiction.controller;
 
-import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
+import com.parkingapp.backendapi.jurisdiction.dto.JurisdictionDto;
 import com.parkingapp.backendapi.jurisdiction.service.JurisdictionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,11 @@ public class JurisdictionController {
     /**
      * Retrieves a list of all jurisdictions currently supported by the application.
      *
-     * @return A {@code ResponseEntity} containing a list of {@code JurisdictionData} objects and an
+     * @return A {@code ResponseEntity} containing a list of {@code JurisdictionDto} objects and an
      *     HTTP status of 200 OK.
      */
     @GetMapping()
-    public ResponseEntity<List<JurisdictionData>> getJurisdiction() {
+    public ResponseEntity<List<JurisdictionDto>> getJurisdiction() {
         return ResponseEntity.ok(jurisdictionService.getSupportedJurisdictions());
     }
 }

@@ -5,9 +5,9 @@ import com.parkingapp.backendapi.report.entity.Report;
 import com.parkingapp.backendapi.report.mapper.ReportRequestMapper;
 import com.parkingapp.backendapi.report.mapper.ReportSummaryMapper;
 import com.parkingapp.backendapi.report.mapper.ReportViewMapper;
-import com.parkingapp.backendapi.report.record.ReportOfficerViewDto;
-import com.parkingapp.backendapi.report.record.ReportRequestDto;
-import com.parkingapp.backendapi.report.record.ReportSummaryDto;
+import com.parkingapp.backendapi.report.dto.ReportOfficerViewDto;
+import com.parkingapp.backendapi.report.dto.ReportRequestDto;
+import com.parkingapp.backendapi.report.dto.ReportSummaryDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.io.IOException;
@@ -89,7 +89,7 @@ public class ReportService {
     // active reports in this range
 
     //  for now use testing jurisdiction -- simulate JWT data
-    // note: in actual this might be a JurisdictionData point? -- worry about this later
+    // note: in actual this might be a JurisdictionDto point? -- worry about this later
     String J_TEST_STATE = "NJ";
     String J_TEST_CITY = "Union City";
 

@@ -1,7 +1,7 @@
 package com.parkingapp.backendapi.report.mapper;
 
 import com.parkingapp.backendapi.report.entity.Vehicle;
-import com.parkingapp.backendapi.report.record.VehicleDto;
+import com.parkingapp.backendapi.report.dto.VehicleDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

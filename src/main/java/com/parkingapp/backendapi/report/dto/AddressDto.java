@@ -1,6 +1,6 @@
-package com.parkingapp.backendapi.report.record;
+package com.parkingapp.backendapi.report.dto;
 
-import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
+import com.parkingapp.backendapi.jurisdiction.dto.JurisdictionDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,4 +21,4 @@ public record AddressDto(
     CoordinatesDto location,
 
     @Valid @NotNull(message = "Jurisdiction data is required")
-    JurisdictionData jurisdiction) {}
+    JurisdictionDto jurisdiction) {}

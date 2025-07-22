@@ -2,10 +2,9 @@ package com.parkingapp.backendapi.report.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.parkingapp.backendapi.report.entity.Report;
-import com.parkingapp.backendapi.report.record.ReportOfficerViewDto;
-import com.parkingapp.backendapi.report.record.ReportRequestDto;
-import com.parkingapp.backendapi.report.record.ReportSummaryDto;
+import com.parkingapp.backendapi.report.dto.ReportOfficerViewDto;
+import com.parkingapp.backendapi.report.dto.ReportRequestDto;
+import com.parkingapp.backendapi.report.dto.ReportSummaryDto;
 import com.parkingapp.backendapi.report.service.ReportService;
 import java.io.IOException;
 import java.util.List;

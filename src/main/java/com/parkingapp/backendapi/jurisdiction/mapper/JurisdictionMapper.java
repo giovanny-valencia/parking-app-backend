@@ -1,7 +1,7 @@
 package com.parkingapp.backendapi.jurisdiction.mapper;
 
 import com.parkingapp.backendapi.jurisdiction.entity.Jurisdiction;
-import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
+import com.parkingapp.backendapi.jurisdiction.dto.JurisdictionDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,12 +12,12 @@ public interface JurisdictionMapper {
   // without it either
   @Mapping(target = "state", expression = "java(entity.getState().name())")
   @Mapping(target = "city", source = "city")
-  JurisdictionData toDto(Jurisdiction entity);
+  JurisdictionDto toDto(Jurisdiction entity);
 
   // need to double-check this
   @Mapping(
       target = "state",
       expression = "java(com.parkingapp.backendapi.common.enums.State.valueOf(dto.state()))")
   @Mapping(target = "city", source = "city")
-  Jurisdiction toEntity(JurisdictionData dto);
+  Jurisdiction toEntity(JurisdictionDto dto);
 }

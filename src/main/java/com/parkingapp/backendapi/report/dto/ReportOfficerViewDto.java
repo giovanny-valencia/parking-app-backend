@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.report.record;
+package com.parkingapp.backendapi.report.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

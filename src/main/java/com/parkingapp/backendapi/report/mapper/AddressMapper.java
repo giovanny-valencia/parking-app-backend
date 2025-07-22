@@ -2,8 +2,8 @@ package com.parkingapp.backendapi.report.mapper;
 
 import com.parkingapp.backendapi.jurisdiction.mapper.JurisdictionMapper;
 import com.parkingapp.backendapi.report.entity.ReportAddress;
-import com.parkingapp.backendapi.report.record.AddressDto;
-import com.parkingapp.backendapi.report.record.CoordinatesDto;
+import com.parkingapp.backendapi.report.dto.AddressDto;
+import com.parkingapp.backendapi.report.dto.CoordinatesDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

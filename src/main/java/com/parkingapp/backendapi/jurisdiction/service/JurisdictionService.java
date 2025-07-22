@@ -3,7 +3,7 @@ package com.parkingapp.backendapi.jurisdiction.service;
 import com.parkingapp.backendapi.common.enums.State;
 import com.parkingapp.backendapi.jurisdiction.entity.Jurisdiction;
 import com.parkingapp.backendapi.jurisdiction.mapper.JurisdictionMapper;
-import com.parkingapp.backendapi.jurisdiction.record.JurisdictionData;
+import com.parkingapp.backendapi.jurisdiction.dto.JurisdictionDto;
 import com.parkingapp.backendapi.jurisdiction.repository.JurisdictionRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class JurisdictionService {
    * @return List of all supported jurisdictions
    */
   @Transactional(readOnly = true)
-  public List<JurisdictionData> getSupportedJurisdictions() {
+  public List<JurisdictionDto> getSupportedJurisdictions() {
     return jurisdictionRepository.findAll().stream().map(jurisdictionMapper::toDto).toList();
   }
 

@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.report.record;
+package com.parkingapp.backendapi.report.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

@@ -58,6 +58,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- testing: H2 local DB memory for junit tests -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Simplifies database querying -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
