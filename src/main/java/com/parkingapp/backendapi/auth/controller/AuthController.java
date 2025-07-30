@@ -17,7 +17,7 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("login")
+  @PostMapping("/login")
   public ResponseEntity<Void> login() {
 
     return ResponseEntity.ok().build();

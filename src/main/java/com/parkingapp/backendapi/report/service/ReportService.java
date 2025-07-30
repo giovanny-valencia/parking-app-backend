@@ -90,8 +90,8 @@ public class ReportService {
 
     //  for now use testing jurisdiction -- simulate JWT data
     // note: in actual this might be a JurisdictionDto point? -- worry about this later
-    String J_TEST_STATE = "NJ";
-    String J_TEST_CITY = "Union City";
+    String J_TEST_STATE = "NJ"; // TODO: FIX THIS
+    String J_TEST_CITY = "Union City"; // TODO: FIX THIS
 
     List<ReportSummaryDto> activeReportSummaries =
         activeParkingReportService.retrieveReportsByJurisdiction(J_TEST_STATE, J_TEST_CITY).stream()

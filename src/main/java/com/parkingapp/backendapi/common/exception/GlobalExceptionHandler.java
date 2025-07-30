@@ -1,8 +1,12 @@
 package com.parkingapp.backendapi.common.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  * Global exception handler file
@@ -22,6 +27,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<Object> handleEntityNotFoundException(
+      EntityNotFoundException ex, WebRequest request) {
+
+    log.error(
+        "Data inconsistency: Authenticated user not found after successful JWT validation: {}",
+        ex.getMessage(),
+        ex);
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+    // Provide a generic, safe message to the client for this internal issue
+    body.put("error", "Internal Server Error");
+    body.put("message", "An unexpected data issue occurred. Please try again or contact support.");
+
+    // This particular EntityNotFoundException indicates a server-side data problem
+    // because the user was already authenticated via JWT.
+    // Therefore, HttpStatus.INTERNAL_SERVER_ERROR is appropriate.
+    return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
   /**
    * Handles exceptions related to a duplicate report found in the database

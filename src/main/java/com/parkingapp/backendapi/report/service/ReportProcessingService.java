@@ -16,6 +16,8 @@ import com.parkingapp.backendapi.user.repository.UserRepository;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -88,7 +90,13 @@ public class ReportProcessingService {
     //  Worth validation checking if user was not found? Seems redundant
     //  * Note: JWT might be sufficient to associate the user preventing server hit? *
     // TODO: replace this with jwt
-    User user = userRepository.findByEmail("testuser@example.com");
+    User user =
+        userRepository
+            .findByEmail("testuser@example.com")
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Authenticated user not found in database (data inconsistency): "));
     report.setReportingUser(user);
 
     // after all data is valid, save the report. Reference it to get the ID & set (associate) images
