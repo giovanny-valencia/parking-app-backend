@@ -39,11 +39,10 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable) // API is stateless (no cookies), safe to disable
         .formLogin(AbstractHttpConfigurer::disable) // client handles
         .httpBasic(AbstractHttpConfigurer::disable) // client handles
-        // configure CORS to only allow requests from client origin
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/v1/auth/**") // public endpoints
-                    .permitAll()
+                auth.requestMatchers("/api/*/auth/**")
+                    .permitAll() // public endpoints
                     .anyRequest()
                     .authenticated()) // all other endpoints are authenticated
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
