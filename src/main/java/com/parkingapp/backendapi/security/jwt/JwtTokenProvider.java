@@ -11,16 +11,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.crypto.SecretKey;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 /**
- * Provides JWT token generation and validation services. This version is refactored to be more
- * efficient and thread-safe by parsing the token once per request and passing the Claims object to
- * other methods.
+ * Provides JWT token generation and validation services.
+ *
+ * <p>Parsing the token once per request and passing the Claims object to other methods.
  */
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
   @Value("${jwt.secret-key}")
@@ -38,27 +40,10 @@ public class JwtTokenProvider {
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
 
-    System.out.println("userDetails: " + userDetails);
+    log.debug("User details: {}", userDetails);
     // todo: add userId to claims
     claims.put("Role", userDetails.getAuthorities());
     return generateToken(claims, userDetails);
-  }
-
-  /**
-   * Generates a new JWT token with extra claims.
-   *
-   * @param claims Extra claims to include in the token.
-   * @param userDetails The user details to include in the token.
-   * @return A new JWT token string.
-   */
-  public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
-    return Jwts.builder()
-        .claims(claims)
-        .subject(userDetails.getUsername())
-        .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + expirationTime))
-        .signWith(getSigningKey())
-        .compact();
   }
 
   /**
@@ -73,11 +58,6 @@ public class JwtTokenProvider {
    */
   public Claims validateTokenAndGetClaims(String token) {
     return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
-  }
-
-  private SecretKey getSigningKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-    return Keys.hmacShaKeyFor(keyBytes);
   }
 
   /**
@@ -95,12 +75,29 @@ public class JwtTokenProvider {
   }
 
   /**
-   * Extracts the username from a pre-parsed Claims object.
+   * Extracts the username subject from a pre-parsed Claims object.
    *
    * @param claims The pre-parsed claims from the JWT.
    * @return The username contained in the token's subject.
    */
   public String extractUsername(Claims claims) {
     return claims.getSubject();
+  }
+
+  // Helper functions
+
+  private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+    return Jwts.builder()
+        .claims(claims)
+        .subject(userDetails.getUsername())
+        .issuedAt(new Date(System.currentTimeMillis()))
+        .expiration(new Date(System.currentTimeMillis() + expirationTime))
+        .signWith(getSigningKey())
+        .compact();
+  }
+
+  private SecretKey getSigningKey() {
+    byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+    return Keys.hmacShaKeyFor(keyBytes);
   }
 }

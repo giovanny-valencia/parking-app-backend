@@ -1,6 +1,8 @@
 package com.parkingapp.backendapi.auth.controller;
 
-import com.parkingapp.backendapi.auth.dto.LoginRequest;
+import com.parkingapp.backendapi.auth.dto.LoginRequestDto;
+import com.parkingapp.backendapi.auth.dto.RegisterRequestDto;
+import com.parkingapp.backendapi.auth.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,14 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
+  private AuthService authService;
+
   // todo: implement
   @PostMapping("/register")
-  public ResponseEntity<Void> register() {
+  public ResponseEntity<Void> RegisterRequest(@RequestBody RegisterRequestDto registerRequest) {
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/login")
-  public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<Void> LoginRequest(@RequestBody LoginRequestDto loginRequest) {
     System.out.println(
         "logging credentials: " + loginRequest.email() + " " + loginRequest.password());
 

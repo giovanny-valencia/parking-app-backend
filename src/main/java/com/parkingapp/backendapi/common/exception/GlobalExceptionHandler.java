@@ -20,8 +20,10 @@ import org.springframework.web.context.request.WebRequest;
 /**
  * Global exception handler file
  *
+ * <p>Note: Do NOT add handlers exceptions handled by Spring Security
+ *
  * <p>When the backend encounters an error and throws it, this handler will automatically catch and
- * handle it by logging it for us to see it and returns a message to the user's client
+ * handle it by logging it for us to see it and returns a message to the user's client.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {

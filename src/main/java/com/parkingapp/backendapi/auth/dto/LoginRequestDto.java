@@ -3,4 +3,4 @@ package com.parkingapp.backendapi.auth.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record LoginRequest(@NotBlank @Email String email, @NotBlank String password) {}
+public record LoginRequestDto(@NotBlank @Email String email, @NotBlank String password) {}
