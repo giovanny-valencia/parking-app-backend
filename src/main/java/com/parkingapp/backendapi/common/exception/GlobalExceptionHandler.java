@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Handles exceptions related to a duplicate report found in the database
+   * Handles exceptions related to a duplicate report found in the database.
    *
    * <p>When a user submits a report, the vehicle will be searched against the database. If there's
    * a current active report {@link com.parkingapp.backendapi.report.entity.Status } with an 'OPEN'
@@ -69,6 +69,24 @@ public class GlobalExceptionHandler {
         new ErrorResponse(ex.getMessage()),
         HttpStatus.CONFLICT // Recommended for duplicate resources
         );
+  }
+
+  /**
+   * Handles exception when a user tries to register with an already existing email address found in
+   * the database.
+   *
+   * <p>When a user registers, the provided email is searched for availability in the database. If
+   * found, throws this error. Intention is to gracefully fail and let the client know.
+   *
+   * <p>This is standard, but allows email scraping
+   *
+   * @param ex the exception
+   * @return the response entity
+   */
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(
+      EmailAlreadyExistsException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.CONFLICT);
   }
 
   /**

@@ -1,11 +1,13 @@
 package com.parkingapp.backendapi.auth.utils;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
  * Ensures password satisfies security requirements
  *
  * <ul>
+ *   <li>Password and confirmPassword are equal
  *   <li>Min length 8 characters
  *   <li>At least one special character
  *   <li>At least one uppercase letter
@@ -26,17 +28,24 @@ public final class PasswordValidator {
    * Checks if a password is secure according to all defined rules.
    *
    * @param password The password string to validate.
+   * @param confirmPassword The confirmation password string to compare.
    * @return true if the password is secure, false otherwise.
    */
-  public static boolean isPasswordSecure(String password) {
-    if (password == null) {
+  public static boolean isPasswordSecure(String password, String confirmPassword) {
+    if (password == null || confirmPassword == null) {
       return false;
     }
 
-    return isMinLengthMet(password)
+    return isPasswordConfirmed(password, confirmPassword)
+        && isMinLengthMet(password)
         && hasSpecialChar(password)
         && hasUppercase(password)
         && hasDigit(password);
+  }
+
+  // confirm password check will run everytime this is run. Makes sense to store it here
+  private static boolean isPasswordConfirmed(String password, String confirmPassword) {
+    return Objects.equals(password, confirmPassword);
   }
 
   private static boolean isMinLengthMet(String password) {
