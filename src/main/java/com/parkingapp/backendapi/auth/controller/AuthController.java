@@ -1,5 +1,6 @@
 package com.parkingapp.backendapi.auth.controller;
 
+import com.parkingapp.backendapi.auth.dto.JwtResponseDto;
 import com.parkingapp.backendapi.auth.dto.LoginRequestDto;
 import com.parkingapp.backendapi.auth.dto.RegisterRequestDto;
 import com.parkingapp.backendapi.auth.service.AuthService;
@@ -17,14 +18,15 @@ public class AuthController {
 
   private AuthService authService;
 
-  // todo: implement
   @PostMapping("/register")
-  public ResponseEntity<Void> RegisterRequest(@RequestBody RegisterRequestDto registerRequest) {
-    return ResponseEntity.ok().build();
+  public ResponseEntity<JwtResponseDto> RegisterRequest(
+      @RequestBody RegisterRequestDto registerRequest) {
+    return ResponseEntity.ok(authService.handleRegisterRequest(registerRequest));
   }
 
+  // todo: implement
   @PostMapping("/login")
-  public ResponseEntity<Void> LoginRequest(@RequestBody LoginRequestDto loginRequest) {
+  public ResponseEntity<JwtResponseDto> LoginRequest(@RequestBody LoginRequestDto loginRequest) {
     System.out.println(
         "logging credentials: " + loginRequest.email() + " " + loginRequest.password());
 

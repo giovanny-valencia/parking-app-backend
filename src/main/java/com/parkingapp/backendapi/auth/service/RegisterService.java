@@ -2,15 +2,14 @@ package com.parkingapp.backendapi.auth.service;
 
 import com.parkingapp.backendapi.auth.dto.JwtResponseDto;
 import com.parkingapp.backendapi.auth.dto.RegisterRequestDto;
+import com.parkingapp.backendapi.auth.mapper.NewUserMapper;
 import com.parkingapp.backendapi.auth.utils.PasswordValidator;
 import com.parkingapp.backendapi.common.exception.EmailAlreadyExistsException;
 import com.parkingapp.backendapi.security.jwt.JwtTokenProvider;
 import com.parkingapp.backendapi.user.entity.AccountType;
 import com.parkingapp.backendapi.user.entity.User;
 import com.parkingapp.backendapi.user.repository.UserRepository;
-import java.time.Instant;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +18,7 @@ import org.springframework.stereotype.Service;
  *
  * <ul>
  *   <li>password satisfies security requirements
- *   <li>firstname and lastname are considered valid, no white spaces, symbols, etc. -- annotations
- *   <li>Valid DOB -- annotation
+ *   <li>firstname, lastname, and DOB are verified in the DTO via annotations
  *   <li>email must be available
  *   <li>hashes password
  *   <li>creates the new user
@@ -31,17 +29,23 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class RegisterService {
-  private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
+  private final UserRepository userRepository;
+  private final NewUserMapper newUserMapper;
 
   public JwtResponseDto registerUser(RegisterRequestDto registerRequestDto) {
+
+    // server side checks for password security policy and verifying password & confirm password
     if (!PasswordValidator.isPasswordSecure(
         registerRequestDto.password(), registerRequestDto.confirmPassword())) {
+
+      // todo: throw exception instead; something simple since client should catch this instead
       return null;
     }
 
-    // Annotations from the Dto class should handle firstname, lastname, and valid DOB checks right?
+    // Annotations from the Dto class should handle firstname, lastname, and valid DOB checks
+
     if (userRepository.findByEmail(registerRequestDto.email()).isPresent()) {
       throw new EmailAlreadyExistsException("That email is taken. Try another.");
     }
@@ -49,31 +53,25 @@ public class RegisterService {
     User newUser = createNewUser(registerRequestDto);
     userRepository.save(newUser);
 
-    UserDetails userDetails = newUser; // errr...?
+    String token = jwtTokenProvider.generateToken(newUser);
 
-    String token = jwtTokenProvider.generateToken(userDetails);
-
-    JwtResponseDto jwtResponseDto =
-        new JwtResponseDto(
-            token,
-            "Bearer",
-            newUser.getEmail(),
-            newUser.getAccountType().toString(),
-            Instant.now().toEpochMilli()); // unsure if this is correct
-
-    return jwtResponseDto;
+    return new JwtResponseDto(token, "Bearer");
   }
 
+  /**
+   * Uses mapper class to convert DTO -> User entity, then hashes and sets password.
+   *
+   * @param registerRequestDto user provided register DTO
+   * @return newUser User
+   */
   private User createNewUser(RegisterRequestDto registerRequestDto) {
-    User newUser = new User();
+    User newUser = newUserMapper.toEntity(registerRequestDto);
 
-    newUser.setFirstName(registerRequestDto.firstName());
-    newUser.setLastName(registerRequestDto.firstName());
-    newUser.setDateOfBirth(registerRequestDto.dateOfBirth());
-    newUser.setEmail(registerRequestDto.email());
     newUser.setHashedPassword(passwordEncoder.encode(registerRequestDto.password()));
+
+    // for now, all user types will resort to standard USER permissions
+    // officers will be manually converted from standard users to officers
     newUser.setAccountType(AccountType.USER);
-    newUser.setCreatedOn(Instant.now());
 
     return newUser;
   }

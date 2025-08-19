@@ -1,13 +1,13 @@
 package com.parkingapp.backendapi.report.service;
 
 import com.parkingapp.backendapi.common.service.ImageValidationService;
+import com.parkingapp.backendapi.report.dto.ReportOfficerViewDto;
+import com.parkingapp.backendapi.report.dto.ReportRequestDto;
+import com.parkingapp.backendapi.report.dto.ReportSummaryDto;
 import com.parkingapp.backendapi.report.entity.Report;
 import com.parkingapp.backendapi.report.mapper.ReportRequestMapper;
 import com.parkingapp.backendapi.report.mapper.ReportSummaryMapper;
 import com.parkingapp.backendapi.report.mapper.ReportViewMapper;
-import com.parkingapp.backendapi.report.dto.ReportOfficerViewDto;
-import com.parkingapp.backendapi.report.dto.ReportRequestDto;
-import com.parkingapp.backendapi.report.dto.ReportSummaryDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.io.IOException;
@@ -98,6 +98,7 @@ public class ReportService {
             .map(reportSummaryMapper::toDto)
             .toList();
 
+    // todo: remove this
     System.out.println("logging active summaries");
     activeReportSummaries.forEach(System.out::println);
 

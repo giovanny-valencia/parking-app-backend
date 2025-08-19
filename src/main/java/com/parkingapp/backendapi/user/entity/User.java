@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,10 +28,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
+  @EqualsAndHashCode.Include
   private Long id;
 
   @Column(name = "first_name", nullable = false)
@@ -55,7 +58,7 @@ public class User implements UserDetails {
   @Column(name = "created_on", nullable = false, updatable = false)
   private Instant createdOn;
 
-  @Column(name = "updated_on")
+  @Column(name = "updated_on", nullable = false)
   private Instant updatedOn;
 
   @Override
@@ -71,5 +74,27 @@ public class User implements UserDetails {
   @Override
   public String getUsername() {
     return this.email;
+  }
+
+  // TODO: Implement these methods
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return UserDetails.super.isAccountNonExpired();
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return UserDetails.super.isAccountNonLocked();
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return UserDetails.super.isCredentialsNonExpired();
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return UserDetails.super.isEnabled();
   }
 }

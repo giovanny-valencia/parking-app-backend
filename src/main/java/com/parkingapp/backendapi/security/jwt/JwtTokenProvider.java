@@ -1,5 +1,6 @@
 package com.parkingapp.backendapi.security.jwt;
 
+import com.parkingapp.backendapi.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -29,21 +30,18 @@ public class JwtTokenProvider {
   private String secretKey;
 
   @Value("${jwt.expiration-time}")
-  private long expirationTime;
+  private long expirationTime; // arbitrary 4 hours
 
   /**
    * Generates a new JWT token for a given user.
    *
-   * @param userDetails The user details to include in the token.
+   * @param user The user details to include in the token.
    * @return A new JWT token string.
    */
-  public String generateToken(UserDetails userDetails) {
-    Map<String, Object> claims = new HashMap<>();
+  public String generateToken(User user) {
+    Map<String, Object> claims = buildClaims(user);
 
-    log.debug("User details: {}", userDetails);
-    // todo: add userId to claims
-    claims.put("Role", userDetails.getAuthorities());
-    return generateToken(claims, userDetails);
+    return generateToken(claims, user);
   }
 
   /**
@@ -85,6 +83,15 @@ public class JwtTokenProvider {
   }
 
   // Helper functions
+
+  private Map<String, Object> buildClaims(User user) {
+    Map<String, Object> claims = new HashMap<>();
+
+    claims.put("userId", user.getId());
+    claims.put("role", user.getAuthorities().iterator().next().getAuthority());
+
+    return claims;
+  }
 
   private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
     return Jwts.builder()
