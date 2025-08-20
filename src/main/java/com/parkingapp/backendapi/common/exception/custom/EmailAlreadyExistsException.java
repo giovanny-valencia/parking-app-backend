@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.common.exception;
+package com.parkingapp.backendapi.common.exception.custom;
 
 public class EmailAlreadyExistsException extends RuntimeException {
   public EmailAlreadyExistsException(String message) {

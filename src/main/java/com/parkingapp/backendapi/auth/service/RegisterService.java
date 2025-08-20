@@ -4,7 +4,8 @@ import com.parkingapp.backendapi.auth.dto.JwtResponseDto;
 import com.parkingapp.backendapi.auth.dto.RegisterRequestDto;
 import com.parkingapp.backendapi.auth.mapper.NewUserMapper;
 import com.parkingapp.backendapi.auth.utils.PasswordValidator;
-import com.parkingapp.backendapi.common.exception.EmailAlreadyExistsException;
+import com.parkingapp.backendapi.common.exception.custom.EmailAlreadyExistsException;
+import com.parkingapp.backendapi.common.exception.custom.PasswordValidationException;
 import com.parkingapp.backendapi.security.jwt.JwtTokenProvider;
 import com.parkingapp.backendapi.user.entity.AccountType;
 import com.parkingapp.backendapi.user.entity.User;
@@ -40,8 +41,8 @@ public class RegisterService {
     if (!PasswordValidator.isPasswordSecure(
         registerRequestDto.password(), registerRequestDto.confirmPassword())) {
 
-      // todo: throw exception instead; something simple since client should catch this instead
-      return null;
+      // todo: while client should catch this, specify the requirements that failed
+      throw new PasswordValidationException("Password does not meet security requirements.");
     }
 
     // Annotations from the Dto class should handle firstname, lastname, and valid DOB checks

@@ -1,6 +1,6 @@
 package com.parkingapp.backendapi.report.service;
 
-import com.parkingapp.backendapi.common.exception.DuplicateReportException;
+import com.parkingapp.backendapi.common.exception.custom.DuplicateReportException;
 import com.parkingapp.backendapi.jurisdiction.entity.Jurisdiction;
 import com.parkingapp.backendapi.jurisdiction.repository.JurisdictionRepository;
 import com.parkingapp.backendapi.jurisdiction.service.JurisdictionCacheService;

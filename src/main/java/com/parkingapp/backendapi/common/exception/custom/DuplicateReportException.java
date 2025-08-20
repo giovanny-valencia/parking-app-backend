@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.common.exception;
+package com.parkingapp.backendapi.common.exception.custom;
 
 public class DuplicateReportException extends RuntimeException {
   public DuplicateReportException(String message) {

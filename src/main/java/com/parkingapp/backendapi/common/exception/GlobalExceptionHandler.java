@@ -1,6 +1,9 @@
 package com.parkingapp.backendapi.common.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.parkingapp.backendapi.common.exception.custom.DuplicateReportException;
+import com.parkingapp.backendapi.common.exception.custom.EmailAlreadyExistsException;
+import com.parkingapp.backendapi.common.exception.custom.PasswordValidationException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -13,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -30,6 +34,17 @@ public class GlobalExceptionHandler {
 
   private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+  /**
+   * Handles cases where a valid JWT exists, but the associated user entity is not found in the
+   * database.
+   *
+   * <p>This indicates an internal data inconsistency, as an authenticated user should always exist.
+   * It logs a detailed error for developers and returns a generic, safe message to the client.
+   *
+   * @param ex The EntityNotFoundException instance.
+   * @param request The current web request context.
+   * @return A ResponseEntity with a 500 Internal Server Error status.
+   */
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<Object> handleEntityNotFoundException(
       EntityNotFoundException ex, WebRequest request) {
@@ -87,6 +102,37 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(
       EmailAlreadyExistsException ex) {
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.CONFLICT);
+  }
+
+  /**
+   * Handles exception when a users new password fails the security policy.
+   *
+   * <p>password creation when registering new user, or password changes
+   *
+   * @param ex the exception
+   * @return the response entity
+   */
+  @ExceptionHandler(PasswordValidationException.class)
+  public ResponseEntity<ErrorResponse> handlePasswordValidationException(
+      PasswordValidationException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.BAD_REQUEST);
+  }
+
+  /**
+   * Handles the BadCredentialsException thrown by Spring Security during login.
+   *
+   * <p>This provides a specific, user-friendly message instead of a generic server error. This
+   * exception is not logged as an error since it's a common and expected occurrence during an
+   * invalid login attempt.
+   *
+   * @param ex The BadCredentialsException instance.
+   * @return A ResponseEntity with a 401 Unauthorized status and a specific error message.
+   */
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+    return new ResponseEntity<>(
+        new ErrorResponse("Incorrect email or password."), // hardcoded response for security
+        HttpStatus.UNAUTHORIZED);
   }
 
   /**

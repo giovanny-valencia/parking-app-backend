@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
   private final RegisterService registerService;
+  private final LoginService loginService;
 
   public JwtResponseDto handleRegisterRequest(RegisterRequestDto registerRequest) {
     return registerService.registerUser(registerRequest);
   }
 
-  public String HandleLoginRequest(LoginRequestDto loginRequest) {
-    return "token";
+  public JwtResponseDto HandleLoginRequest(LoginRequestDto loginRequest) {
+    return loginService.loginUser(loginRequest);
   }
 }

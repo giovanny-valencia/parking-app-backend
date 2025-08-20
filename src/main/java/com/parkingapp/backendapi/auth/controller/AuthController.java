@@ -21,16 +21,14 @@ public class AuthController {
   @PostMapping("/register")
   public ResponseEntity<JwtResponseDto> RegisterRequest(
       @RequestBody RegisterRequestDto registerRequest) {
+
     return ResponseEntity.ok(authService.handleRegisterRequest(registerRequest));
   }
 
-  // todo: implement
   @PostMapping("/login")
   public ResponseEntity<JwtResponseDto> LoginRequest(@RequestBody LoginRequestDto loginRequest) {
-    System.out.println(
-        "logging credentials: " + loginRequest.email() + " " + loginRequest.password());
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(authService.HandleLoginRequest(loginRequest));
   }
 
   // todo: v2, add logout for token rotation
