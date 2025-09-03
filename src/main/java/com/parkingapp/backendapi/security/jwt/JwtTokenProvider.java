@@ -30,7 +30,7 @@ public class JwtTokenProvider {
   private String secretKey;
 
   @Value("${jwt.expiration-time}")
-  private long expirationTime; // arbitrary 4 hours
+  private long expirationTime;
 
   /**
    * Generates a new JWT token for a given user.
