@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.security.jwt;
+package com.parkingapp.backendapi.infrastructure.security.jwt;
 
 import com.parkingapp.backendapi.user.entity.User;
 import io.jsonwebtoken.Claims;

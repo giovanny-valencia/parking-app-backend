@@ -32,8 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReportService {
 
   private static final Logger log = LoggerFactory.getLogger(ReportService.class);
-  private final ReportProcessingService reportProcessingService;
-  private final ActiveParkingReportService activeParkingReportService;
+  //private final ReportProcessingService reportProcessingService;
+ // private final ActiveParkingReportService activeParkingReportService;
   private final ImageValidationService imageValidationService;
 
   private final ReportRequestMapper reportRequestMapper;
@@ -71,7 +71,7 @@ public class ReportService {
 
     Report report = reportRequestMapper.toEntity(reportRequest);
 
-    reportProcessingService.processReport(report, licensePlateImageFile, violationImageFiles);
+    //reportProcessingService.processReport(report, licensePlateImageFile, violationImageFiles);
   }
 
   /**
@@ -80,29 +80,31 @@ public class ReportService {
    *
    * @return List of ReportSummaryDto for the active reports given a jurisdiction
    */
-  public List<ReportSummaryDto> getActiveReportSummaries() {
-    // TODO: recheck and update these comments after demo for prod
-
-    // officer will send JWT as bearer token -- this will produce their associated jurisdiction
-    // (grabbed here)
-    // TODO: current officer lat/long location and possibly a desired radius -- will only provide
-    // active reports in this range
-
-    //  for now use testing jurisdiction -- simulate JWT data
-    // note: in actual this might be a JurisdictionDto point? -- worry about this later
-    String J_TEST_STATE = "NJ"; // TODO: FIX THIS
-    String J_TEST_CITY = "Union City"; // TODO: FIX THIS
-
-    List<ReportSummaryDto> activeReportSummaries =
-        activeParkingReportService.retrieveReportsByJurisdiction(J_TEST_STATE, J_TEST_CITY).stream()
-            .map(reportSummaryMapper::toDto)
-            .toList();
-
-    // todo: remove this
-    System.out.println("logging active summaries");
-    activeReportSummaries.forEach(System.out::println);
-
-    return activeReportSummaries;
+  public void
+  //List<ReportSummaryDto>
+  getActiveReportSummaries() {
+//    // TODO: recheck and update these comments after demo for prod
+//
+//    // officer will send JWT as bearer token -- this will produce their associated jurisdiction
+//    // (grabbed here)
+//    // TODO: current officer lat/long location and possibly a desired radius -- will only provide
+//    // active reports in this range
+//
+//    //  for now use testing jurisdiction -- simulate JWT data
+//    // note: in actual this might be a JurisdictionDto point? -- worry about this later
+//    String J_TEST_STATE = "NJ"; // TODO: FIX THIS
+//    String J_TEST_CITY = "Union City"; // TODO: FIX THIS
+//
+//    List<ReportSummaryDto> activeReportSummaries =
+//        activeParkingReportService.retrieveReportsByJurisdiction(J_TEST_STATE, J_TEST_CITY).stream()
+//            .map(reportSummaryMapper::toDto)
+//            .toList();
+//
+//    // todo: remove this
+//    System.out.println("logging active summaries");
+//    activeReportSummaries.forEach(System.out::println);
+//
+//    return activeReportSummaries;
   }
 
   /**
@@ -111,9 +113,11 @@ public class ReportService {
    * @param id selected report id
    * @return full report details
    */
-  public ReportOfficerViewDto getSelectedReportDetails(Long id) {
+  public void
+  //ReportOfficerViewDto
+  getSelectedReportDetails(Long id) {
 
-    return activeParkingReportService.retrieveReportDetails(id);
+      //return activeParkingReportService.retrieveReportDetails(id);
   }
 
   /**

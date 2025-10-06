@@ -1,6 +1,6 @@
-package com.parkingapp.backendapi.security.jwt;
+package com.parkingapp.backendapi.infrastructure.security.jwt;
 
-import com.parkingapp.backendapi.security.service.UserDetailsServiceImpl;
+import com.parkingapp.backendapi.infrastructure.security.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

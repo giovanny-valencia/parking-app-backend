@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parkingapp.backendapi.report.dto.ReportOfficerViewDto;
 import com.parkingapp.backendapi.report.dto.ReportRequestDto;
-import com.parkingapp.backendapi.report.dto.ReportSummaryDto;
 import com.parkingapp.backendapi.report.service.ReportService;
 import java.io.IOException;
 import java.util.List;
@@ -52,12 +51,16 @@ public class ReportController {
    *     status of 200 OK. Currently, returns an empty response.
    */
   @GetMapping("/active-summaries")
-  public ResponseEntity<List<ReportSummaryDto>> getActiveReportSummaries(
+  public void
+      // ResponseEntity<List<ReportSummaryDto>>
+      getActiveReportSummaries(
+
       //   @AuthenticationPrincipal UserDetails principal
       ) {
-    List<ReportSummaryDto> activeReportSummaries = reportService.getActiveReportSummaries();
+    System.out.println("active summaries hit");
+    // List<ReportSummaryDto> activeReportSummaries = reportService.getActiveReportSummaries();
 
-    return ResponseEntity.ok(activeReportSummaries);
+    // return ResponseEntity.ok(activeReportSummaries);
   }
 
   /**
@@ -67,8 +70,11 @@ public class ReportController {
    * @return full Report data
    */
   @GetMapping("/{id}")
-  public ResponseEntity<ReportOfficerViewDto> getSelectedReportDetails(@PathVariable Long id) {
-    return ResponseEntity.ok(reportService.getSelectedReportDetails(id));
+  public void
+      // ResponseEntity<ReportOfficerViewDto>
+      getSelectedReportDetails(@PathVariable Long id) {
+    System.out.println("report for ID: " + id + " hit");
+    // return ResponseEntity.ok(reportService.getSelectedReportDetails(id));
   }
 
   /**

@@ -37,5 +37,7 @@ public interface NewUserMapper {
     so setting this value here seems optimal
   */
   @Mapping(target = "updatedOn", expression = "java(java.time.Instant.now())")
+
+  @Mapping(target = "agreedToTerms", source = "dto.agreedToTerms")
   User toEntity(RegisterRequestDto dto);
 }

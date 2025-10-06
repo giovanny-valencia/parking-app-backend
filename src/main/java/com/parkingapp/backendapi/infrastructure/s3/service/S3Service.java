@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.s3.service;
+package com.parkingapp.backendapi.infrastructure.s3.service;
 
 import java.io.IOException;
 import lombok.AllArgsConstructor;

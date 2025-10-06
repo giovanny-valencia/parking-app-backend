@@ -6,7 +6,7 @@ import com.parkingapp.backendapi.auth.mapper.NewUserMapper;
 import com.parkingapp.backendapi.auth.utils.PasswordValidator;
 import com.parkingapp.backendapi.common.exception.custom.EmailAlreadyExistsException;
 import com.parkingapp.backendapi.common.exception.custom.PasswordValidationException;
-import com.parkingapp.backendapi.security.jwt.JwtTokenProvider;
+import com.parkingapp.backendapi.infrastructure.security.jwt.JwtTokenProvider;
 import com.parkingapp.backendapi.user.entity.AccountType;
 import com.parkingapp.backendapi.user.entity.User;
 import com.parkingapp.backendapi.user.repository.UserRepository;
@@ -36,20 +36,22 @@ public class RegisterService {
   private final NewUserMapper newUserMapper;
 
   public JwtResponseDto registerUser(RegisterRequestDto registerRequestDto) {
-
+    System.out.println("made it to registerUser");
     // server side checks for password security policy and verifying password & confirm password
     if (!PasswordValidator.isPasswordSecure(
         registerRequestDto.password(), registerRequestDto.confirmPassword())) {
-
+      System.out.println("failed passwordCheck");
       // todo: while client should catch this, specify the requirements that failed
       throw new PasswordValidationException("Password does not meet security requirements.");
     }
-
+    System.out.println("password ok");
     // Annotations from the Dto class should handle firstname, lastname, and valid DOB checks
 
     if (userRepository.findByEmail(registerRequestDto.email()).isPresent()) {
       throw new EmailAlreadyExistsException("That email is taken. Try another.");
     }
+
+    System.out.println("before save reached");
 
     User newUser = createNewUser(registerRequestDto);
     userRepository.save(newUser);

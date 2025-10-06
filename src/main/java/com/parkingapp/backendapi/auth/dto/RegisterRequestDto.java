@@ -15,4 +15,5 @@ public record RegisterRequestDto(
     // for simplicity, names are standard letters. No Spaces, apostrophes, or hyphens for now
     @NotBlank @Pattern(regexp = "^[a-zA-Z]+$") String firstName,
     @NotBlank @Pattern(regexp = "^[a-zA-Z]+$") String lastName,
-    @NotNull @Past LocalDate dateOfBirth) {}
+    @NotNull @Past LocalDate dateOfBirth,
+    @NotNull Boolean agreedToTerms) {}

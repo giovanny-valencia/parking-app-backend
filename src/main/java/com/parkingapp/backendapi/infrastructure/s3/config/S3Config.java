@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.s3.config;
+package com.parkingapp.backendapi.infrastructure.s3.config;
 
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;

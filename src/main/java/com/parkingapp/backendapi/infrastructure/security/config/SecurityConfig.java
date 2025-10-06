@@ -1,7 +1,7 @@
-package com.parkingapp.backendapi.security.config;
+package com.parkingapp.backendapi.infrastructure.security.config;
 
-import com.parkingapp.backendapi.security.jwt.JwtAuthenticationFilter;
-import com.parkingapp.backendapi.security.service.UserDetailsServiceImpl;
+import com.parkingapp.backendapi.infrastructure.security.jwt.JwtAuthenticationFilter;
+import com.parkingapp.backendapi.infrastructure.security.service.UserDetailsServiceImpl;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

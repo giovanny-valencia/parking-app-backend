@@ -4,6 +4,7 @@ import com.parkingapp.backendapi.auth.dto.JwtResponseDto;
 import com.parkingapp.backendapi.auth.dto.LoginRequestDto;
 import com.parkingapp.backendapi.auth.dto.RegisterRequestDto;
 import com.parkingapp.backendapi.auth.service.AuthService;
+import com.parkingapp.backendapi.common.annotations.RateLimit;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,16 +19,18 @@ public class AuthController {
 
   private AuthService authService;
 
+  @RateLimit(limit = 3, timeWindowSeconds = 15)
   @PostMapping("/register")
   public ResponseEntity<JwtResponseDto> RegisterRequest(
       @RequestBody RegisterRequestDto registerRequest) {
+    System.out.println("server hit: " + registerRequest);
 
     return ResponseEntity.ok(authService.handleRegisterRequest(registerRequest));
   }
 
+  @RateLimit(limit = 3, timeWindowSeconds = 10)
   @PostMapping("/login")
   public ResponseEntity<JwtResponseDto> LoginRequest(@RequestBody LoginRequestDto loginRequest) {
-
     return ResponseEntity.ok(authService.HandleLoginRequest(loginRequest));
   }
 

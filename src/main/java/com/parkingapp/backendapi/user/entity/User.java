@@ -61,6 +61,9 @@ public class User implements UserDetails {
   @Column(name = "updated_on", nullable = false)
   private Instant updatedOn;
 
+  @Column(name = "agreed_to_terms", nullable = false)
+  private boolean agreedToTerms;
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return List.of(new SimpleGrantedAuthority(accountType.name()));

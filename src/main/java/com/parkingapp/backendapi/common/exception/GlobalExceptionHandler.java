@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.parkingapp.backendapi.common.exception.custom.DuplicateReportException;
 import com.parkingapp.backendapi.common.exception.custom.EmailAlreadyExistsException;
 import com.parkingapp.backendapi.common.exception.custom.PasswordValidationException;
+import com.parkingapp.backendapi.common.exception.custom.RateLimitExceededException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -116,6 +117,19 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handlePasswordValidationException(
       PasswordValidationException ex) {
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.BAD_REQUEST);
+  }
+
+  /**
+   * Handles exception when a user requests passed the rate limit.
+   *
+   * @param ex the exception
+   * @return the response entity
+   */
+  @ExceptionHandler(RateLimitExceededException.class)
+  public ResponseEntity<ErrorResponse> handleRateLimitExceededException(
+      RateLimitExceededException ex) {
+    return new ResponseEntity<>(
+        new ErrorResponse("Too many requests, limit exceeded."), HttpStatus.TOO_MANY_REQUESTS);
   }
 
   /**

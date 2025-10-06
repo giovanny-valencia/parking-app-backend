@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.security.service;
+package com.parkingapp.backendapi.infrastructure.security.service;
 
 import com.parkingapp.backendapi.user.repository.UserRepository;
 import lombok.AllArgsConstructor;

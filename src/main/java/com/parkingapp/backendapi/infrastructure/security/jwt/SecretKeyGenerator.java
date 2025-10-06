@@ -1,4 +1,4 @@
-package com.parkingapp.backendapi.security.jwt;
+package com.parkingapp.backendapi.infrastructure.security.jwt;
 
 import java.security.SecureRandom;
 import java.util.Base64;

@@ -2,7 +2,7 @@ package com.parkingapp.backendapi.auth.service;
 
 import com.parkingapp.backendapi.auth.dto.JwtResponseDto;
 import com.parkingapp.backendapi.auth.dto.LoginRequestDto;
-import com.parkingapp.backendapi.security.jwt.JwtTokenProvider;
+import com.parkingapp.backendapi.infrastructure.security.jwt.JwtTokenProvider;
 import com.parkingapp.backendapi.user.entity.User;
 import com.parkingapp.backendapi.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 /**

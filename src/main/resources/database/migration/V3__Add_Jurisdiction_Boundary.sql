@@ -1,0 +1,10 @@
+ALTER TABLE jurisdictions
+ADD COLUMN boundary POLYGON NOT NULL SRID 4326,
+ADD COLUMN max_longitude DOUBLE PRECISION NOT NULL,
+ADD COLUMN min_longitude DOUBLE PRECISION NOT NULL,
+ADD COLUMN max_latitude DOUBLE PRECISION NOT NULL,
+ADD COLUMN min_latitude DOUBLE PRECISION NOT NULL;
+
+-- Add a spatial index for efficient queries
+ALTER TABLE jurisdictions
+ADD SPATIAL INDEX (boundary);

@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.locationtech.jts.geom.Polygon;
 
 @Entity
 @Table(
@@ -31,10 +32,27 @@ public class Jurisdiction {
   @Column(name = "id", nullable = false)
   private Long id;
 
+  // TODO: future expansions plan. Multi-services or lost client. "isSupported".
+
   @Enumerated(EnumType.STRING)
   @Column(name = "state", nullable = false, length = 2)
   private State state;
 
   @Column(name = "city", nullable = false, length = 32)
   private String city;
+
+  @Column(name = "boundary", columnDefinition = "POLYGON", nullable = false)
+  private Polygon boundary;
+
+  @Column(name = "max_longitude", nullable = false)
+  private Double maxLongitude;
+
+  @Column(name = "min_longitude", nullable = false)
+  private Double minLongitude;
+
+  @Column(name = "max_latitude", nullable = false)
+  private Double maxLatitude;
+
+  @Column(name = "min_latitude", nullable = false)
+  private Double minLatitude;
 }
