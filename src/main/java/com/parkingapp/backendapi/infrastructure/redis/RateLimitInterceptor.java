@@ -48,7 +48,6 @@ public class RateLimitInterceptor implements HandlerInterceptor {
       } else {
         clientIdentifier = authentication.getName();
       }
-      System.out.println("ClientId: " + clientIdentifier);
     } else {
       clientIdentifier = request.getRemoteAddr();
     }
