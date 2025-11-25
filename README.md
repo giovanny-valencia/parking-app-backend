@@ -1,4 +1,4 @@
-# Illegal Parking Reporter – Backend
+# Parking Violation Reporter – Backend
 
 **Java Spring Boot** REST API with **MySQL**, **Redis**, **JWT security**, and **custom JTS geolocation**.
 
